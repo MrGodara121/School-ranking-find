@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | [SITE_NAME]</title>
+    <meta name="description" content="Review our terms of service that govern your use of our school ratings platform. Understand your rights and responsibilities when using our website.">
+    
+    <link rel="canonical" href="https://[DOMAIN]/terms.html">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <meta property="og:title" content="Terms of Service | [SITE_NAME]">
+    <meta property="og:description" content="Terms and conditions for using our platform">
+    <meta property="og:url" content="https://[DOMAIN]/terms.html">
+</head>
+<body>
+    <div id="header"></div>
+    <div id="navigation"></div>
+    
+    <main class="legal-page">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a> > <span>Terms of Service</span>
+            </nav>
+            
+            <div class="page-header">
+                <h1>Terms of Service</h1>
+                <p class="last-updated">Last Updated: <span id="last-updated-date">January 1, 2024</span></p>
+            </div>
+            
+            <div class="legal-content" id="terms-content">
+                <div class="loading-spinner">Loading terms of service...</div>
+            </div>
+            
+            <div class="legal-contact">
+                <h2>Questions About Our Terms?</h2>
+                <p>If you have any questions about these Terms, please contact us:</p>
+                <ul>
+                    <li>📧 By email: <a href="mailto:[LEAD_NOTIFICATION_EMAIL]">[LEAD_NOTIFICATION_EMAIL]</a></li>
+                    <li>📬 By visiting our <a href="/contact.html">Contact Page</a></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <div id="footer"></div>
+    <div id="disclaimer-banner"></div>
+    
+    <script src="/js/config.js"></script>
+    
+    <script>
+        Promise.all([
+            fetch('/components/header.html').then(r => r.text()),
+            fetch('/components/navigation.html').then(r => r.text()),
+            fetch('/components/footer.html').then(r => r.text())
+        ]).then(([header, nav, footer]) => {
+            document.getElementById('header').innerHTML = header;
+            document.getElementById('navigation').innerHTML = nav;
+            document.getElementById('footer').innerHTML = footer;
+        });
+        
+        // Load terms content
+        fetch(`${CONFIG.API_BASE}?action=getLegalContent&type=terms`)
+            .then(response => response.json())
+            .then(data => {
+                const contentDiv = document.getElementById('terms-content');
+                
+                if (data && data.content) {
+                    contentDiv.innerHTML = data.content;
+                    if (data.last_updated) {
+                        document.getElementById('last-updated-date').textContent = 
+                            Utils.formatDate(data.last_updated);
+                    }
+                } else {
+                    contentDiv.innerHTML = getFallbackTermsContent();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading terms:', error);
+                document.getElementById('terms-content').innerHTML = getFallbackTermsContent();
+            });
+            
+        // Load disclaimer
+        fetch('/data/disclaimers.json')
+            .then(r => r.json())
+            .then(disclaimers => {
+                const disclaimer = disclaimers?.find(d => d.Page_Type === 'legal') || 
+                                 disclaimers?.find(d => d.Page_Type === 'default');
+                if (disclaimer) {
+                    document.getElementById('disclaimer-banner').innerHTML = disclaimer.Content_HTML;
+                }
+            });
+            
+        function getFallbackTermsContent() {
+            return `
+                <section>
+                    <h2>Agreement to Terms</h2>
+                    <p>By accessing or using [SITE_NAME] website, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access the service.</p>
+                </section>
+                
+                <section>
+                    <h2>Description of Service</h2>
+                    <p>[SITE_NAME] provides a platform for users to access school ratings, reviews, and performance data. We aggregate information from various public sources and user contributions to help parents and students make informed decisions about schools.</p>
+                </section>
+                
+                <section>
+                    <h2>User Accounts</h2>
+                    <p>When you create an account with us, you must provide accurate, complete, and current information. You are responsible for safeguarding the password and for all activities under your account.</p>
+                    <p>We reserve the right to terminate accounts, remove content, or cancel orders at our sole discretion.</p>
+                </section>
+                
+                <section>
+                    <h2>Premium Membership</h2>
+                    <h3>Subscription Terms</h3>
+                    <p>Premium memberships are billed on a recurring basis (monthly or yearly). By selecting a premium plan, you authorize us to charge your payment method on a recurring basis.</p>
+                    
+                    <h3>Cancellation</h3>
+                    <p>You may cancel your premium membership at any time. Cancellation will take effect at the end of your current billing period.</p>
+                    
+                    <h3>Refunds</h3>
+                    <p>All payments are non-refundable. We do not provide refunds for partial subscription periods.</p>
+                </section>
+                
+                <section>
+                    <h2>Intellectual Property</h2>
+                    <p>The service and its original content, features, and functionality are owned by [SITE_NAME] and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.</p>
+                </section>
+                
+                <section>
+                    <h2>User Content</h2>
+                    <h3>Reviews and Comments</h3>
+                    <p>Users may post reviews, comments, and other content. You retain ownership of your content, but you grant us a license to use, reproduce, modify, and distribute it on our platform.</p>
+                    
+                    <h3>Content Guidelines</h3>
+                    <p>You agree not to post content that:</p>
+                    <ul>
+                        <li>Is defamatory, abusive, or harassing</li>
+                        <li>Contains false or misleading information</li>
+                        <li>Infringes on anyone's intellectual property rights</li>
+                        <li>Contains viruses or malicious code</li>
+                        <li>Is spam or commercial solicitation</li>
+                    </ul>
+                    
+                    <h3>Content Removal</h3>
+                    <p>We reserve the right to remove any content that violates these terms or that we deem inappropriate.</p>
+                </section>
+                
+                <section>
+                    <h2>Data Accuracy</h2>
+                    <p>We strive to provide accurate and up-to-date information, but we do not warrant that:</p>
+                    <ul>
+                        <li>The information is complete, accurate, or reliable</li>
+                        <li>The service will be uninterrupted or error-free</li>
+                        <li>Any defects will be corrected</li>
+                    </ul>
+                    <p>School data is collected from public sources and may contain errors. Users should verify critical information directly with schools.</p>
+                </section>
+                
+                <section>
+                    <h2>Limitation of Liability</h2>
+                    <p>To the maximum extent permitted by law, [SITE_NAME] shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from:</p>
+                    <ul>
+                        <li>Your use or inability to use the service</li>
+                        <li>Any conduct or content of any third party on the service</li>
+                        <li>Unauthorized access to or alteration of your transmissions or data</li>
+                    </ul>
+                </section>
+                
+                <section>
+                    <h2>Disclaimer of Warranties</h2>
+                    <p>The service is provided on an "AS IS" and "AS AVAILABLE" basis. [SITE_NAME] makes no representations or warranties of any kind, express or implied, regarding the operation or availability of the service, or the information, content, and materials included therein.</p>
+                </section>
+                
+                <section>
+                    <h2>Third-Party Links</h2>
+                    <p>Our service may contain links to third-party websites or services that are not owned or controlled by [SITE_NAME]. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party websites.</p>
+                </section>
+                
+                <section>
+                    <h2>Termination</h2>
+                    <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
+                </section>
+                
+                <section>
+                    <h2>Governing Law</h2>
+                    <p>These Terms shall be governed and construed in accordance with the laws of [STATE], without regard to its conflict of law provisions.</p>
+                </section>
+                
+                <section>
+                    <h2>Changes to Terms</h2>
+                    <p>We reserve the right to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days' notice prior to any new terms taking effect.</p>
+                </section>
+                
+                <section>
+                    <h2>Contact Information</h2>
+                    <p>If you have any questions about these Terms, please contact us at [LEAD_NOTIFICATION_EMAIL].</p>
+                </section>
+            `;
+        }
+    </script>
+</body>
+</html>
