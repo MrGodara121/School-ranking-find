@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | [SITE_NAME]</title>
+    <meta name="description" content="Get in touch with our team at [SITE_NAME]. We're here to answer your questions about school ratings, data corrections, partnerships, or general inquiries.">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://[DOMAIN]/contact.html">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Contact Us | [SITE_NAME]">
+    <meta property="og:description" content="Reach out to our team for support, inquiries, or partnerships">
+    <meta property="og:url" content="https://[DOMAIN]/contact.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://[DOMAIN]/assets/images/contact-og.jpg">
+    
+    <!-- Font Awesome for Icons (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header"></div>
+    
+    <!-- Navigation Component -->
+    <div id="navigation"></div>
+    
+    <main>
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb" aria-label="breadcrumb">
+                <ol class="breadcrumb-list">
+                    <li><a href="/">Home</a></li>
+                    <li><span class="separator">›</span></li>
+                    <li><span class="current">Contact Us</span></li>
+                </ol>
+            </nav>
+            
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Contact Us</h1>
+                <p class="page-subtitle">We're here to help! Reach out with any questions, feedback, or partnership inquiries.</p>
+            </div>
+            
+            <!-- Contact Grid Layout -->
+            <div class="contact-grid">
+                <!-- Left Column - Contact Form -->
+                <div class="contact-form-container">
+                    <div class="form-card">
+                        <h2><i class="fas fa-paper-plane"></i> Send Us a Message</h2>
+                        <p class="form-intro">Fill out the form below and we'll get back to you within 24-48 hours.</p>
+                        
+                        <!-- Success Message (hidden by default) -->
+                        <div id="success-message" class="alert alert-success" style="display: none;">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Thank you for contacting us! We'll respond within 24-48 hours.</span>
+                        </div>
+                        
+                        <!-- Error Message (hidden by default) -->
+                        <div id="error-message" class="alert alert-error" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>An error occurred. Please try again or email us directly.</span>
+                        </div>
+                        
+                        <!-- Contact Form -->
+                        <form id="contact-form" class="contact-form" method="POST">
+                            <!-- Honeypot field (hidden from real users) -->
+                            <div class="honeypot-field">
+                                <label>Leave this empty: <input type="text" name="website" id="honeypot" autocomplete="off"></label>
+                            </div>
+                            
+                            <!-- Name Field -->
+                            <div class="form-group">
+                                <label for="name" class="required-field">Full Name <span class="required-star">*</span></label>
+                                <input type="text" id="name" name="name" class="form-control" 
+                                       placeholder="Enter your full name" required 
+                                       minlength="2" maxlength="100" pattern="[A-Za-z\s]+" 
+                                       title="Please enter a valid name (letters and spaces only)">
+                                <div class="form-error" id="name-error"></div>
+                            </div>
+                            
+                            <!-- Email Field -->
+                            <div class="form-group">
+                                <label for="email" class="required-field">Email Address <span class="required-star">*</span></label>
+                                <input type="email" id="email" name="email" class="form-control" 
+                                       placeholder="your@email.com" required 
+                                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                       title="Please enter a valid email address">
+                                <div class="form-error" id="email-error"></div>
+                            </div>
+                            
+                            <!-- Phone Field (Optional) -->
+                            <div class="form-group">
+                                <label for="phone">Phone Number <span class="optional-badge">Optional</span></label>
+                                <input type="tel" id="phone" name="phone" class="form-control" 
+                                       placeholder="(555) 123-4567" 
+                                       pattern="[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}"
+                                       title="Please enter a valid phone number">
+                                <small class="form-hint">Format: (555) 123-4567</small>
+                                <div class="form-error" id="phone-error"></div>
+                            </div>
+                            
+                            <!-- Subject Field -->
+                            <div class="form-group">
+                                <label for="subject" class="required-field">Subject <span class="required-star">*</span></label>
+                                <select id="subject" name="subject" class="form-control" required>
+                                    <option value="" disabled selected>Select a subject</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="support">Technical Support</option>
+                                    <option value="data">Data Correction Request</option>
+                                    <option value="partnership">Partnership Opportunity</option>
+                                    <option value="advertising">Advertising / Sponsorship</option>
+                                    <option value="press">Press / Media Inquiry</option>
+                                    <option value="feedback">Website Feedback</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <div class="form-error" id="subject-error"></div>
+                            </div>
+                            
+                            <!-- Message Field -->
+                            <div class="form-group">
+                                <label for="message" class="required-field">Message <span class="required-star">*</span></label>
+                                <textarea id="message" name="message" class="form-control" 
+                                          rows="6" required minlength="10" maxlength="5000"
+                                          placeholder="Please provide as much detail as possible..."></textarea>
+                                <div class="character-count">
+                                    <span id="char-count">0</span>/5000 characters
+                                </div>
+                                <div class="form-error" id="message-error"></div>
+                            </div>
+                            
+                            <!-- reCAPTCHA -->
+                            <div class="form-group recaptcha-group">
+                                <div class="g-recaptcha" data-sitekey="[RECAPTCHA_KEY]"></div>
+                                <div class="form-error" id="recaptcha-error"></div>
+                            </div>
+                            
+                            <!-- Form Footer -->
+                            <div class="form-footer">
+                                <p class="required-note"><span class="required-star">*</span> Required fields</p>
+                                
+                                <!-- Privacy Notice -->
+                                <div class="privacy-notice">
+                                    <input type="checkbox" id="privacy-consent" name="privacy-consent" required checked>
+                                    <label for="privacy-consent">
+                                        I agree to the <a href="/privacy.html" target="_blank">Privacy Policy</a> and consent to having this website store my submitted information. <span class="required-star">*</span>
+                                    </label>
+                                </div>
+                                
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary btn-large" id="submit-btn">
+                                    <span class="btn-text">Send Message</span>
+                                    <span class="btn-loader" style="display: none;">
+                                        <i class="fas fa-spinner fa-spin"></i> Sending...
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Right Column - Contact Information -->
+                <div class="contact-info-container">
+                    <!-- Quick Contact Card -->
+                    <div class="info-card">
+                        <h2><i class="fas fa-address-card"></i> Get in Touch</h2>
+                        
+                        <!-- Email -->
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Email Us</h3>
+                                <p><a href="mailto:[LEAD_NOTIFICATION_EMAIL]" class="contact-link">[LEAD_NOTIFICATION_EMAIL]</a></p>
+                                <p class="info-note">We reply within 24-48 hours</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Phone -->
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Call Us</h3>
+                                <p><a href="tel:+15551234567" class="contact-link">(555) 123-4567</a></p>
+                                <p class="info-note">Mon-Fri, 9am-5pm EST</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Office Address -->
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Office Address</h3>
+                                <address>
+                                    [SITE_NAME]<br>
+                                    123 Education Lane<br>
+                                    Suite 100<br>
+                                    [CITY], [STATE] [ZIP]<br>
+                                    United States
+                                </address>
+                            </div>
+                        </div>
+                        
+                        <!-- Live Chat (if available) -->
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-comment-dots"></i>
+                            </div>
+                            <div class="info-content">
+                                <h3>Live Chat</h3>
+                                <p><a href="#" id="live-chat-trigger" class="contact-link">Start Live Chat</a></p>
+                                <p class="info-note">Available during business hours</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Business Hours Card -->
+                    <div class="info-card">
+                        <h2><i class="fas fa-clock"></i> Business Hours</h2>
+                        
+                        <div class="hours-grid">
+                            <div class="hour-row">
+                                <span class="day">Monday - Friday</span>
+                                <span class="time">9:00 AM - 5:00 PM EST</span>
+                            </div>
+                            <div class="hour-row">
+                                <span class="day">Saturday</span>
+                                <span class="time">10:00 AM - 2:00 PM EST</span>
+                            </div>
+                            <div class="hour-row">
+                                <span class="day">Sunday</span>
+                                <span class="time">Closed</span>
+                            </div>
+                        </div>
+                        
+                        <p class="holiday-note">
+                            <i class="fas fa-calendar-alt"></i> Closed on major holidays
+                        </p>
+                    </div>
+                    
+                    <!-- FAQ Quick Links -->
+                    <div class="info-card">
+                        <h2><i class="fas fa-question-circle"></i> Quick Help</h2>
+                        
+                        <div class="quick-links">
+                            <h3>Common Topics:</h3>
+                            <ul>
+                                <li><a href="/methodology.html">How are schools rated?</a></li>
+                                <li><a href="/faq.html#data-correction">Report incorrect data</a></li>
+                                <li><a href="/premium.html">Premium membership</a></li>
+                                <li><a href="/faq.html#account">Account issues</a></li>
+                                <li><a href="/privacy.html">Privacy policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Media Links -->
+                    <div class="info-card">
+                        <h2><i class="fas fa-share-alt"></i> Connect With Us</h2>
+                        
+                        <div class="social-links">
+                            <a href="#" class="social-link" target="_blank" rel="noopener" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-link" target="_blank" rel="noopener" aria-label="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-link" target="_blank" rel="noopener" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="social-link" target="_blank" rel="noopener" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="social-link" target="_blank" rel="noopener" aria-label="YouTube">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Response Time Guarantee -->
+                    <div class="info-card guarantee-card">
+                        <i class="fas fa-clock fa-3x"></i>
+                        <h3>Response Guarantee</h3>
+                        <p>We aim to respond to all inquiries within <strong>24 hours</strong> during business days. For urgent matters, please include "URGENT" in your subject line.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map Section (Optional) -->
+            <section class="map-section">
+                <h2>Find Us</h2>
+                <div class="map-container">
+                    <!-- Google Maps Embed (replace with actual embed code) -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.9663095343008!2d-73.98510768458444!3d40.75889697932681!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus" 
+                        width="100%" 
+                        height="400" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </section>
+            
+            <!-- Frequently Asked Contact Questions -->
+            <section class="faq-section">
+                <h2>Frequently Asked Questions</h2>
+                
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <h3>How quickly will I get a response?</h3>
+                        <p>We aim to respond to all inquiries within 24-48 hours during business days. For faster assistance, please include your phone number.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>How do I report incorrect school data?</h3>
+                        <p>Select "Data Correction Request" from the subject dropdown and include the school name, incorrect data point, and source of correct information.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Can I advertise on your site?</h3>
+                        <p>Yes! Please select "Advertising / Sponsorship" from the subject dropdown, and our partnerships team will reach out with media kit and options.</p>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <h3>Do you offer API access?</h3>
+                        <p>API access is available for premium partners. Please select "Partnership Opportunity" for more information.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Trust Badges -->
+            <section class="trust-section">
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <i class="fas fa-lock"></i>
+                        <span>Secure Form</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Privacy Protected</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-clock"></i>
+                        <span>24hr Response</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Verified Business</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer Component -->
+    <div id="footer"></div>
+    
+    <!-- Disclaimer Banner -->
+    <div id="disclaimer-banner"></div>
+    
+    <!-- JavaScript Files -->
+    <script src="/js/config.js"></script>
+    
+    <script>
+        // Load HTML components
+        Promise.all([
+            fetch('/components/header.html').then(r => r.text()),
+            fetch('/components/navigation.html').then(r => r.text()),
+            fetch('/components/footer.html').then(r => r.text())
+        ]).then(([header, nav, footer]) => {
+            document.getElementById('header').innerHTML = header;
+            document.getElementById('navigation').innerHTML = nav;
+            document.getElementById('footer').innerHTML = footer;
+        });
+        
+        // Character counter for message box
+        const messageBox = document.getElementById('message');
+        const charCount = document.getElementById('char-count');
+        
+        if (messageBox) {
+            messageBox.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count;
+                
+                // Visual warning at 4500 characters
+                if (count > 4500) {
+                    charCount.style.color = 'orange';
+                } else if (count > 4900) {
+                    charCount.style.color = 'red';
+                } else {
+                    charCount.style.color = 'inherit';
+                }
+            });
+        }
+        
+        // Form validation and submission
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Clear previous errors
+            clearErrors();
+            
+            // Honeypot check - if filled, it's a bot
+            if (document.getElementById('honeypot').value) {
+                console.log('Bot detected');
+                // Silently fail for bots
+                showSuccess();
+                return;
+            }
+            
+            // Get form data
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone') || '',
+                subject: formData.get('subject'),
+                message: formData.get('message'),
+                recaptcha: formData.get('g-recaptcha-response'),
+                privacy_consent: formData.get('privacy-consent') === 'on',
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent,
+                page_url: window.location.href,
+                referrer: document.referrer || 'direct'
+            };
+            
+            // Client-side validation
+            let isValid = true;
+            
+            // Name validation
+            if (!data.name || data.name.length < 2) {
+                showError('name', 'Please enter your full name');
+                isValid = false;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!data.email || !emailRegex.test(data.email)) {
+                showError('email', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            // Check blocked email domains
+            if (data.email && CONFIG.BLOCKED_EMAIL_DOMAINS) {
+                const domain = data.email.split('@')[1];
+                if (CONFIG.BLOCKED_EMAIL_DOMAINS.includes(domain)) {
+                    showError('email', 'Please use a permanent email address');
+                    isValid = false;
+                }
+            }
+            
+            // Phone validation (if provided)
+            if (data.phone) {
+                const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+                if (!phoneRegex.test(data.phone)) {
+                    showError('phone', 'Please enter a valid phone number');
+                    isValid = false;
+                }
+            }
+            
+            // Subject validation
+            if (!data.subject) {
+                showError('subject', 'Please select a subject');
+                isValid = false;
+            }
+            
+            // Message validation
+            if (!data.message || data.message.length < 10) {
+                showError('message', 'Please enter a message (minimum 10 characters)');
+                isValid = false;
+            }
+            
+            // reCAPTCHA validation
+            if (!data.recaptcha) {
+                showError('recaptcha', 'Please complete the reCAPTCHA verification');
+                isValid = false;
+            }
+            
+            // Privacy consent validation
+            if (!data.privacy_consent) {
+                alert('You must agree to the privacy policy to submit this form.');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Show loading state
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoader = submitBtn.querySelector('.btn-loader');
+            
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+            
+            // Rate limiting check
+            if (!Utils.checkRateLimit('contact')) {
+                hideLoader();
+                alert('Please wait a moment before sending another message.');
+                return;
+            }
+            
+            // Send to Apps Script
+            fetch(`${CONFIG.API_BASE}?action=contact`, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                // Success - reset form and show success message
+                document.getElementById('contact-form').reset();
+                grecaptcha.reset();
+                Utils.updateRateLimit('contact');
+                showSuccess();
+                
+                // Track in analytics
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'contact_form_submit', {
+                        'event_category': 'engagement',
+                        'event_label': data.subject
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting form:', error);
+                showError('form', 'An error occurred. Please try again or email us directly.');
+                
+                // Track error
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'contact_form_error', {
+                        'event_category': 'error',
+                        'event_label': error.message
+                    });
+                }
+            })
+            .finally(() => {
+                hideLoader();
+            });
+            
+            function hideLoader() {
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoader.style.display = 'none';
+            }
+        });
+        
+        // Helper functions for form validation
+        function showError(field, message) {
+            const errorDiv = document.getElementById(`${field}-error`);
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+            
+            const input = document.getElementById(field);
+            if (input) {
+                input.classList.add('error');
+            }
+        }
+        
+        function clearErrors() {
+            document.querySelectorAll('.form-error').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.form-control').forEach(el => {
+                el.classList.remove('error');
+            });
+            
+            document.getElementById('error-message').style.display = 'none';
+        }
+        
+        function showSuccess() {
+            document.getElementById('success-message').style.display = 'flex';
+            document.getElementById('contact-form').reset();
+            
+            // Hide success message after 10 seconds
+            setTimeout(() => {
+                document.getElementById('success-message').style.display = 'none';
+            }, 10000);
+            
+            // Scroll to success message
+            document.getElementById('success-message').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }
+        
+        // Live chat trigger (if implemented)
+        document.getElementById('live-chat-trigger')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Live chat is currently in development. Please use the contact form or email us directly.');
+        });
+        
+        // Load disclaimer
+        fetch('/data/disclaimers.json')
+            .then(r => r.json())
+            .then(disclaimers => {
+                const disclaimer = disclaimers?.find(d => d.Page_Type === 'contact') || 
+                                 disclaimers?.find(d => d.Page_Type === 'default');
+                if (disclaimer) {
+                    document.getElementById('disclaimer-banner').innerHTML = disclaimer.Content_HTML;
+                }
+            })
+            .catch(() => {
+                // Fallback disclaimer
+                document.getElementById('disclaimer-banner').innerHTML = `
+                    <div class="disclaimer-banner">
+                        <p>⚠️ This site is for informational purposes only. Not affiliated with any government entity.</p>
+                    </div>
+                `;
+            });
+            
+        // Pre-fill form if coming from specific link
+        const urlParams = new URLSearchParams(window.location.search);
+        const subjectParam = urlParams.get('subject');
+        if (subjectParam) {
+            const subjectSelect = document.getElementById('subject');
+            if (subjectSelect && [...subjectSelect.options].some(opt => opt.value === subjectParam)) {
+                subjectSelect.value = subjectParam;
+            }
+        }
+        
+        const messageParam = urlParams.get('message');
+        if (messageParam) {
+            document.getElementById('message').value = decodeURIComponent(messageParam);
+            // Trigger character count update
+            charCount.textContent = messageParam.length;
+        }
+    </script>
+    
+    <!-- Additional CSS for Contact Page -->
+    <style>
+        /* Contact Page Specific Styles */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Form Card */
+        .form-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .form-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+        }
+        
+        .form-card h2 i {
+            margin-right: 0.5rem;
+        }
+        
+        .form-intro {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        /* Form Fields */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .required-field .required-star {
+            color: #e74c3c;
+        }
+        
+        .optional-badge {
+            font-size: 0.75rem;
+            background: var(--light-gray);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--gray);
+            font-weight: normal;
+            margin-left: 0.5rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+        }
+        
+        .form-control.error {
+            border-color: #e74c3c;
+        }
+        
+        .form-error {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .form-hint {
+            display: block;
+            color: var(--gray);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Character Count */
+        .character-count {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+        
+        #char-count {
+            font-weight: 600;
+        }
+        
+        /* Honeypot - Hidden */
+        .honeypot-field {
+            display: none;
+        }
+        
+        /* reCAPTCHA */
+        .recaptcha-group {
+            margin: 1.5rem 0;
+        }
+        
+        /* Privacy Notice */
+        .privacy-notice {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .privacy-notice input[type="checkbox"] {
+            margin-top: 0.2rem;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .privacy-notice label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .privacy-notice a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .privacy-notice a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Form Footer */
+        .form-footer {
+            margin-top: 2rem;
+        }
+        
+        .required-note {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+        
+        .btn-large {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .btn-loader {
+            margin-left: 0.5rem;
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert i {
+            font-size: 1.25rem;
+        }
+        
+        /* Info Cards */
+        .info-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .info-card h2 {
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .info-card h2 i {
+            margin-right: 0.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            align-items: flex-start;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(var(--primary-color-rgb), 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-content h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--dark);
+        }
+        
+        .contact-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-word;
+        }
+        
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+        
+        .info-note {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+        
+        address {
+            font-style: normal;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+        
+        /* Hours Grid */
+        .hours-grid {
+            margin-bottom: 1rem;
+        }
+        
+        .hour-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed var(--light-gray);
+        }
+        
+        .hour-row:last-child {
+            border-bottom: none;
+        }
+        
+        .day {
+            font-weight: 500;
+        }
+        
+        .time {
+            color: var(--dark);
+        }
+        
+        .holiday-note {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+        
+        .holiday-note i {
+            margin-right: 0.25rem;
+        }
+        
+        /* Quick Links */
+        .quick-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .quick-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .quick-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: block;
+            padding: 0.25rem 0;
+        }
+        
+        .quick-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--light-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+        
+        /* Guarantee Card */
+        .guarantee-card {
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+        }
+        
+        .guarantee-card i {
+            margin-bottom: 1rem;
+        }
+        
+        .guarantee-card h3 {
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+        
+        .guarantee-card p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+        
+        /* Map Section */
+        .map-section {
+            margin: 3rem 0;
+        }
+        
+        .map-section h2 {
+            margin-bottom: 1.5rem;
+        }
+        
+        .map-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            margin: 3rem 0;
+        }
+        
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .faq-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .faq-item h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .faq-item p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+        
+        /* Trust Section */
+        .trust-section {
+            margin: 3rem 0;
+        }
+        
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .trust-badge i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .form-card {
+                padding: 1.5rem;
+            }
+            
+            .trust-badges {
+                gap: 1rem;
+            }
+            
+            .trust-badge {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=[GA4_ID]"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '[GA4_ID]');
+    </script>
+</body>
+</html>
