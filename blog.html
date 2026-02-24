@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education Blog - School Ratings, Tips & Insights | [SITE_NAME]</title>
+    <meta name="description" content="Expert articles on school selection, education trends, parent tips, and detailed guides to help you make informed decisions for your child's education.">
+    
+    <link rel="canonical" href="https://[DOMAIN]/blog.html">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="[SITE_NAME] Blog" href="/blog-feed.xml">
+</head>
+<body>
+    <div id="header"></div>
+    <div id="navigation"></div>
+    
+    <main>
+        <section class="blog-header">
+            <div class="container">
+                <h1>Education Blog & Resources</h1>
+                <p>Expert insights, parent guides, and school selection tips</p>
+            </div>
+        </section>
+        
+        <div class="container">
+            <div class="blog-layout">
+                <!-- Main Blog Posts -->
+                <div class="blog-main">
+                    <div class="blog-grid" id="blog-posts-container"></div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination" id="pagination"></div>
+                </div>
+                
+                <!-- Blog Sidebar -->
+                <div class="blog-sidebar">
+                    <div class="sidebar-widget">
+                        <h3>Search Blog</h3>
+                        <div id="blog-search"></div>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <h3>Categories</h3>
+                        <ul id="blog-categories"></ul>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <h3>Popular Posts</h3>
+                        <ul id="popular-posts"></ul>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <h3>Newsletter</h3>
+                        <div id="lead-form-blog"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="footer"></div>
+    
+    <script src="/js/config.js"></script>
+    
+    <script>
+        let allPosts = [];
+        const postsPerPage = 9;
+        let currentPage = 1;
+        
+        fetch('/data/blog.json')
+            .then(response => response.json())
+            .then(posts => {
+                allPosts = posts.filter(p => p.Status === 'published')
+                    .sort((a,b) => new Date(b.Published_Date) - new Date(a.Published_Date));
+                
+                renderPosts();
+                renderCategories();
+                renderPopularPosts();
+            });
+            
+        function renderPosts() {
+            const start = (currentPage - 1) * postsPerPage;
+            const end = start + postsPerPage;
+            const postsToShow = allPosts.slice(start, end);
+            
+            const container = document.getElementById('blog-posts-container');
+            container.innerHTML = '';
+            
+            postsToShow.forEach(post => {
+                container.innerHTML += `
+                    <article class="blog-card">
+                        <img src="${post.Featured_Image || '/assets/images/default-blog.jpg'}" alt="${post.Title}" loading="lazy">
+                        <div class="blog-card-content">
+                            <span class="blog-category">${post.Category}</span>
+                            <h3><a href="/blog/${post.Slug}">${post.Title}</a></h3>
+                            <p class="blog-meta">${Utils.formatDate(post.Published_Date)}</p>
+                            <p>${post.Meta_Description.substring(0, 120)}...</p>
+                            <a href="/blog/${post.Slug}" class="read-more">Read More →</a>
+                        </div>
+                    </article>
+                `;
+            });
+            
+            renderPagination();
+        }
+        
+        function renderPagination() {
+            const totalPages = Math.ceil(allPosts.length / postsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            pagination.innerHTML = '';
+            
+            if (currentPage > 1) {
+                pagination.innerHTML += `<button onclick="changePage(${currentPage-1})">← Previous</button>`;
+            }
+            
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.innerHTML += `<button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+            }
+            
+            if (currentPage < totalPages) {
+                pagination.innerHTML += `<button onclick="changePage(${currentPage+1})">Next →</button>`;
+            }
+        }
+        
+        window.changePage = (page) => {
+            currentPage = page;
+            renderPosts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        
+        function renderCategories() {
+            const categories = [...new Set(allPosts.map(p => p.Category))];
+            const container = document.getElementById('blog-categories');
+            
+            categories.forEach(cat => {
+                container.innerHTML += `<li><a href="/blog/category/${cat.toLowerCase()}">${cat} (${allPosts.filter(p => p.Category === cat).length})</a></li>`;
+            });
+        }
+        
+        function renderPopularPosts() {
+            // For demo, just show latest 5
+            const popular = allPosts.slice(0, 5);
+            const container = document.getElementById('popular-posts');
+            
+            popular.forEach(post => {
+                container.innerHTML += `<li><a href="/blog/${post.Slug}">${post.Title}</a></li>`;
+            });
+        }
+        
+        // Load components
+        fetch('/components/header.html').then(r=>r.text()).then(d=>document.getElementById('header').innerHTML=d);
+        fetch('/components/navigation.html').then(r=>r.text()).then(d=>document.getElementById('navigation').innerHTML=d);
+        fetch('/components/footer.html').then(r=>r.text()).then(d=>document.getElementById('footer').innerHTML=d);
+        fetch('/components/lead-form.html').then(r=>r.text()).then(d=>document.getElementById('lead-form-blog').innerHTML=d);
+        fetch('/components/search-bar-mini.html').then(r=>r.text()).then(d=>document.getElementById('blog-search').innerHTML=d);
+    </script>
+</body>
+</html>
