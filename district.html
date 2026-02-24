@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[DISTRICT_NAME] School District - Ratings & Reviews | [SITE_NAME]</title>
+    <meta name="description" content="Complete profile for [DISTRICT_NAME] including [TOTAL_SCHOOLS] schools, average rating [AVG_RATING], parent reviews, and detailed performance metrics.">
+    
+    <link rel="canonical" href="https://[DOMAIN]/district/[DISTRICT_SLUG]">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+    <div id="header"></div>
+    <div id="navigation"></div>
+    
+    <main>
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a> > <a href="/states.html">States</a> > <a href="/state/[STATE_SLUG]">[STATE_NAME]</a> > <span>[DISTRICT_NAME]</span>
+            </nav>
+            
+            <div class="district-header">
+                <div class="district-title">
+                    <h1>[DISTRICT_NAME] School District</h1>
+                    <p class="district-location">📍 [STATE_NAME]</p>
+                </div>
+                <div class="district-rating-large">
+                    <div class="rating-circle">
+                        <span class="rating-number">[AVG_RATING]</span>
+                        <span class="rating-out-of">/5</span>
+                    </div>
+                    <p>District Rating</p>
+                </div>
+            </div>
+            
+            <!-- District Stats -->
+            <div class="district-stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value">[TOTAL_SCHOOLS]</span>
+                    <span class="stat-label">Schools</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">[PARENT_REVIEW_COUNT]</span>
+                    <span class="stat-label">Parent Reviews</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">$[MEDIAN_INCOME]</span>
+                    <span class="stat-label">Median Income</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">[AVG_RATING]</span>
+                    <span class="stat-label">Average Rating</span>
+                </div>
+            </div>
+            
+            <!-- Schools in District -->
+            <section class="district-schools">
+                <h2>Schools in [DISTRICT_NAME]</h2>
+                <div class="school-grid" id="district-schools-container"></div>
+            </section>
+            
+            <!-- District Performance -->
+            <section class="district-performance">
+                <h2>District Performance Overview</h2>
+                <div class="performance-chart" id="performance-chart"></div>
+            </section>
+            
+            <!-- Parent Reviews Section -->
+            <section class="parent-reviews">
+                <h2>Parent Reviews <span class="premium-badge">PREMIUM</span></h2>
+                <div class="premium-teaser">
+                    <p>Access detailed parent reviews for all schools in this district</p>
+                    <div id="premium-box-district"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <div id="footer"></div>
+    
+    <script src="/js/config.js"></script>
+    <script src="/js/premium-access.js"></script>
+    
+    <script>
+        const districtSlug = window.location.pathname.split('/').pop();
+        
+        Promise.all([
+            fetch('/data/districts.json').then(r=>r.json()),
+            fetch('/data/schools.json').then(r=>r.json())
+        ]).then(([districts, schools]) => {
+            const district = districts.find(d => d.Slug === districtSlug);
+            if (!district) window.location.href = '/404.html';
+            
+            // Update page content
+            document.title = document.title.replace('[DISTRICT_NAME]', district.District_Name);
+            document.querySelector('meta[name="description"]').content = 
+                document.querySelector('meta[name="description"]').content
+                    .replace('[DISTRICT_NAME]', district.District_Name)
+                    .replace('[TOTAL_SCHOOLS]', district.Total_Schools)
+                    .replace('[AVG_RATING]', district.Avg_Rating);
+            
+            // Update header
+            document.querySelector('.district-title h1').textContent = `${district.District_Name} School District`;
+            document.querySelector('.district-location').textContent = `📍 ${district.State_Name}`;
+            document.querySelector('.district-rating-large .rating-number').textContent = district.Avg_Rating;
+            
+            // Update stats
+            const stats = document.querySelectorAll('.stat-value');
+            stats[0].textContent = district.Total_Schools;
+            stats[1].textContent = district.Parent_Review_Count;
+            stats[2].textContent = `$${district.Median_Household_Income}`;
+            stats[3].textContent = district.Avg_Rating;
+            
+            // Load schools in district
+            const districtSchools = schools.filter(s => s.District_ID === district.District_ID && s.Is_Active === "TRUE");
+            const container = document.getElementById('district-schools-container');
+            
+            districtSchools.forEach(school => {
+                container.innerHTML += `
+                    <a href="/school/${school.Slug}" class="school-card">
+                        <h3>${school.School_Name}</h3>
+                        <p class="school-meta">${school.City} • Grades ${school.Grade_Level}</p>
+                        <div class="rating">⭐ ${school.Rating}/5</div>
+                        <p class="school-stats">${school.Student_Count} students • ${school.Student_Teacher_Ratio}:1 ratio</p>
+                    </a>
+                `;
+            });
+        });
+        
+        // Load components
+        fetch('/components/header.html').then(r=>r.text()).then(d=>document.getElementById('header').innerHTML=d);
+        fetch('/components/navigation.html').then(r=>r.text()).then(d=>document.getElementById('navigation').innerHTML=d);
+        fetch('/components/footer.html').then(r=>r.text()).then(d=>document.getElementById('footer').innerHTML=d);
+        fetch('/components/premium-box.html').then(r=>r.text()).then(d=>document.getElementById('premium-box-district').innerHTML=d);
+    </script>
+</body>
+</html>
