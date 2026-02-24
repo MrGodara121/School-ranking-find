@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+    
+    <!--
+        This sitemap is dynamically generated.
+        Last generated: [CURRENT_DATE]
+        Total URLs: [TOTAL_URLS]
+    -->
+    
+    <!-- ==================== STATIC PAGES ==================== -->
+    
+    <!-- Homepage -->
+    <url>
+        <loc>https://[DOMAIN]/</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- Core Pages -->
+    <url>
+        <loc>https://[DOMAIN]/states.html</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    
+    <url>
+        <loc>https://[DOMAIN]/blog.html</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://[DOMAIN]/compare.html</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <url>
+        <loc>https://[DOMAIN]/methodology.html</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- Legal Pages -->
+    <url>
+        <loc>https://[DOMAIN]/privacy.html</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <url>
+        <loc>https://[DOMAIN]/terms.html</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <url>
+        <loc>https://[DOMAIN]/disclaimer.html</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <url>
+        <loc>https://[DOMAIN]/contact.html</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
+    </url>
+    
+    <!-- ==================== STATE PAGES ==================== -->
+    <!-- These will be dynamically populated from Google Sheet -->
+    <!-- STATE_PLACEHOLDER_START -->
+    
+    <url>
+        <loc>https://[DOMAIN]/state/[STATE_SLUG]</loc>
+        <lastmod>[STATE_LAST_UPDATED]</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <!-- STATE_PLACEHOLDER_END -->
+    
+    <!-- ==================== DISTRICT PAGES ==================== -->
+    <!-- DISTRICT_PLACEHOLDER_START -->
+    
+    <url>
+        <loc>https://[DOMAIN]/district/[DISTRICT_SLUG]</loc>
+        <lastmod>[DISTRICT_LAST_UPDATED]</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    
+    <!-- DISTRICT_PLACEHOLDER_END -->
+    
+    <!-- ==================== SCHOOL PAGES ==================== -->
+    <!-- SCHOOL_PLACEHOLDER_START -->
+    
+    <url>
+        <loc>https://[DOMAIN]/school/[SCHOOL_SLUG]</loc>
+        <lastmod>[SCHOOL_LAST_UPDATED]</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+        
+        <!-- Image information (if available) -->
+        <image:image>
+            <image:loc>https://[DOMAIN]/assets/images/school-placeholder.jpg</image:loc>
+            <image:title>[SCHOOL_NAME] - School Building</image:title>
+            <image:caption>Photo of [SCHOOL_NAME] in [CITY], [STATE_NAME]</image:caption>
+        </image:image>
+    </url>
+    
+    <!-- SCHOOL_PLACEHOLDER_END -->
+    
+    <!-- ==================== BLOG PAGES ==================== -->
+    <!-- BLOG_PLACEHOLDER_START -->
+    
+    <url>
+        <loc>https://[DOMAIN]/blog/[BLOG_SLUG]</loc>
+        <lastmod>[BLOG_PUBLISHED_DATE]</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+        
+        <!-- News tag for Google News (if applicable) -->
+        <news:news>
+            <news:publication>
+                <news:name>[SITE_NAME]</news:name>
+                <news:language>en</news:language>
+            </news:publication>
+            <news:publication_date>[BLOG_PUBLISHED_DATE]</news:publication_date>
+            <news:title>[BLOG_TITLE]</news:title>
+            <news:keywords>education, schools, ratings, [BLOG_CATEGORY]</news:keywords>
+        </news:news>
+        
+        <!-- Image for blog post -->
+        <image:image>
+            <image:loc>[BLOG_FEATURED_IMAGE]</image:loc>
+            <image:title>[BLOG_TITLE]</image:title>
+        </image:image>
+    </url>
+    
+    <!-- BLOG_PLACEHOLDER_END -->
+    
+    <!-- ==================== COMPARISON PAGES ==================== -->
+    <!-- COMPARISON_PLACEHOLDER_START -->
+    
+    <url>
+        <loc>https://[DOMAIN]/compare?school1=[SCHOOL_ID_1]&school2=[SCHOOL_ID_2]</loc>
+        <lastmod>[CURRENT_DATE]</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    
+    <!-- COMPARISON_PLACEHOLDER_END -->
+    
+    <!-- ==================== SITEMAP INDEX INFORMATION ==================== -->
+    
+    <!--
+        Note: This sitemap is generated dynamically.
+        For large sites, consider splitting into multiple sitemaps:
+        - sitemap-states.xml
+        - sitemap-districts.xml
+        - sitemap-schools.xml
+        - sitemap-blog.xml
+        - sitemap-static.xml
+    -->
+    
+</urlset>
+
+<!-- 
+    ALTERNATIVE: If you have multiple sitemaps, use sitemap index file:
+    
+    <?xml version="1.0" encoding="UTF-8"?>
+    <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <sitemap>
+            <loc>https://[DOMAIN]/sitemap-static.xml</loc>
+            <lastmod>[CURRENT_DATE]</lastmod>
+        </sitemap>
+        <sitemap>
+            <loc>https://[DOMAIN]/sitemap-states.xml</loc>
+            <lastmod>[CURRENT_DATE]</lastmod>
+        </sitemap>
+        <sitemap>
+            <loc>https://[DOMAIN]/sitemap-districts.xml</loc>
+            <lastmod>[CURRENT_DATE]</lastmod>
+        </sitemap>
+        <sitemap>
+            <loc>https://[DOMAIN]/sitemap-schools.xml</loc>
+            <lastmod>[CURRENT_DATE]</lastmod>
+        </sitemap>
+        <sitemap>
+            <loc>https://[DOMAIN]/sitemap-blog.xml</loc>
+            <lastmod>[CURRENT_DATE]</lastmod>
+        </sitemap>
+    </sitemapindex>
+-->
