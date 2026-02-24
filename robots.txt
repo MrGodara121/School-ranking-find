@@ -1,0 +1,101 @@
+# robots.txt for [DOMAIN]
+# Created: [CURRENT_DATE]
+
+# Allow all major search engines to crawl
+User-agent: *
+Allow: /
+
+# Disallow access to specific directories
+Disallow: /components/
+Disallow: /data/
+Disallow: /assets/
+Disallow: /cgi-bin/
+Disallow: /temp/
+
+# Disallow access to specific file types (if needed)
+Disallow: /*.json$
+Disallow: /*.txt$ (except robots.txt itself)
+Disallow: /*.log$
+Disallow: /*.bak$
+
+# Disallow URLs with query parameters (to avoid duplicate content)
+Disallow: /*?*
+
+# Disallow admin or private areas
+Disallow: /premium/
+Disallow: /admin/
+Disallow: /user/
+Disallow: /login/
+Disallow: /register/
+
+# Disallow specific pages from being indexed
+Disallow: /lead-submit
+Disallow: /thank-you
+Disallow: /confirm
+Disallow: /unsubscribe
+
+# Disallow dynamic pages with parameters
+Disallow: /compare?*
+Disallow: /search?*
+Disallow: /filter?*
+
+# Allow specific dynamic pages
+Allow: /compare$
+Allow: /search$
+Allow: /states$
+Allow: /blog$
+
+# Sitemap location
+Sitemap: https://[DOMAIN]/sitemap.xml
+
+# Crawl delay (be polite to servers)
+Crawl-delay: 1
+
+# Host directive
+Host: https://[DOMAIN]
+
+# User-agent for specific bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+User-agent: Yandex
+Allow: /
+Crawl-delay: 2
+
+User-agent: FacebookExternalHit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+# Block known bad bots (optional)
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Noarchive for certain pages (optional)
+User-agent: *
+Noarchive: /compare/
+
+# Clean-param to help Google understand URL parameters
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content
+Clean-param: sessionid
+Clean-param: ref
