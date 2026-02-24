@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schools by State - Find Ratings & Reviews | [SITE_NAME]</title>
+    <meta name="description" content="Browse school ratings, reviews, and performance data by state. Compare schools across all 50 states with detailed metrics and parent reviews.">
+    
+    <link rel="canonical" href="https://[DOMAIN]/states.html">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Schools by State",
+        "description": "Complete listing of schools by state",
+        "numberOfItems": 50,
+        "itemListElement": []
+    }
+    </script>
+</head>
+<body>
+    <div id="header"></div>
+    <div id="navigation"></div>
+    
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Find Schools by State</h1>
+                <p>Select a state to view detailed school ratings, reviews, and performance data</p>
+                <div id="search-bar-mini"></div>
+            </div>
+        </section>
+        
+        <section class="states-grid-section">
+            <div class="container">
+                <div class="states-grid" id="states-container">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Top States by Rating -->
+        <section class="top-states">
+            <div class="container">
+                <h2>Top Rated States</h2>
+                <div class="state-rankings" id="top-states-container"></div>
+            </div>
+        </section>
+        
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="container">
+                <h2>Frequently Asked Questions About School Ratings by State</h2>
+                <div id="faq-block-states"></div>
+            </div>
+        </section>
+    </main>
+    
+    <div id="footer"></div>
+    
+    <script src="/js/config.js"></script>
+    <script src="/js/search.js"></script>
+    
+    <script>
+        fetch('/components/header.html').then(r=>r.text()).then(d=>document.getElementById('header').innerHTML=d);
+        fetch('/components/navigation.html').then(r=>r.text()).then(d=>document.getElementById('navigation').innerHTML=d);
+        fetch('/components/footer.html').then(r=>r.text()).then(d=>document.getElementById('footer').innerHTML=d);
+        fetch('/components/search-bar-mini.html').then(r=>r.text()).then(d=>document.getElementById('search-bar-mini').innerHTML=d);
+        
+        // Load states data
+        fetch('/data/states.json')
+            .then(response => response.json())
+            .then(states => {
+                const activeStates = states.filter(s => s.Is_Active === "TRUE");
+                
+                // Populate states grid
+                const container = document.getElementById('states-container');
+                activeStates.sort((a,b) => a.State_Name.localeCompare(b.State_Name)).forEach(state => {
+                    container.innerHTML += `
+                        <a href="/state/${state.Slug}" class="state-card-large">
+                            <h3>${state.State_Name}</h3>
+                            <div class="state-metrics">
+                                <span class="metric">🏫 ${state.Total_Schools} Schools</span>
+                                <span class="metric">⭐ ${parseFloat(state.Avg_Rating).toFixed(1)} Avg Rating</span>
+                                <span class="metric">📅 Updated ${state.Last_Updated}</span>
+                            </div>
+                        </a>
+                    `;
+                });
+                
+                // Top states by rating
+                const topStates = [...activeStates].sort((a,b) => b.Avg_Rating - a.Avg_Rating).slice(0, 5);
+                const topContainer = document.getElementById('top-states-container');
+                topStates.forEach((state, index) => {
+                    topContainer.innerHTML += `
+                        <div class="rank-item">
+                            <span class="rank">#${index+1}</span>
+                            <a href="/state/${state.Slug}">${state.State_Name}</a>
+                            <span class="rating">⭐ ${parseFloat(state.Avg_Rating).toFixed(1)}</span>
+                        </div>
+                    `;
+                });
+            });
+            
+        // Load FAQ
+        fetch('/data/faqs.json')
+            .then(response => response.json())
+            .then(faqs => {
+                const stateFaqs = faqs.filter(f => f.Page_Type === 'states');
+                const container = document.getElementById('faq-block-states');
+                stateFaqs.forEach(faq => {
+                    container.innerHTML += `
+                        <div class="faq-item">
+                            <button class="faq-question">${faq.Question}</button>
+                            <div class="faq-answer">${faq.Answer}</div>
+                        </div>
+                    `;
+                });
+            });
+    </script>
+</body>
+</html>
