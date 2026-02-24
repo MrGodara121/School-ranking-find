@@ -1,0 +1,314 @@
+<!-- Secondary Navigation Component -->
+<nav class="secondary-nav" aria-label="Secondary Navigation">
+    <div class="container">
+        <ul class="secondary-nav-list">
+            <!-- States Dropdown -->
+            <li class="secondary-nav-item dropdown">
+                <a href="/states.html" class="secondary-nav-link dropdown-toggle">
+                    Browse by State
+                    <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </a>
+                <div class="dropdown-menu" id="states-dropdown">
+                    <div class="dropdown-loading">Loading states...</div>
+                </div>
+            </li>
+            
+            <!-- School Type Dropdown -->
+            <li class="secondary-nav-item dropdown">
+                <a href="#" class="secondary-nav-link dropdown-toggle">
+                    School Type
+                    <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="/school-type/public" class="dropdown-item">Public Schools</a>
+                    <a href="/school-type/charter" class="dropdown-item">Charter Schools</a>
+                    <a href="/school-type/private" class="dropdown-item">Private Schools</a>
+                    <a href="/school-type/magnet" class="dropdown-item">Magnet Schools</a>
+                </div>
+            </li>
+            
+            <!-- Grade Level Dropdown -->
+            <li class="secondary-nav-item dropdown">
+                <a href="#" class="secondary-nav-link dropdown-toggle">
+                    Grade Level
+                    <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="/grade-level/elementary" class="dropdown-item">Elementary Schools</a>
+                    <a href="/grade-level/middle" class="dropdown-item">Middle Schools</a>
+                    <a href="/grade-level/high" class="dropdown-item">High Schools</a>
+                    <a href="/grade-level/k-12" class="dropdown-item">K-12 Schools</a>
+                </div>
+            </li>
+            
+            <!-- Resources Dropdown -->
+            <li class="secondary-nav-item dropdown">
+                <a href="#" class="secondary-nav-link dropdown-toggle">
+                    Resources
+                    <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="/blog.html" class="dropdown-item">Blog</a>
+                    <a href="/methodology.html" class="dropdown-item">Methodology</a>
+                    <a href="/faq.html" class="dropdown-item">FAQ</a>
+                    <a href="/glossary.html" class="dropdown-item">School Terms Glossary</a>
+                </div>
+            </li>
+            
+            <!-- Quick Links (Right aligned) -->
+            <li class="secondary-nav-item quick-links">
+                <a href="/top-rated.html" class="quick-link">Top Rated</a>
+                <a href="/compare.html" class="quick-link">Compare Schools</a>
+                <a href="/recent-reviews.html" class="quick-link">Recent Reviews</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- JavaScript for Navigation -->
+<script>
+(function() {
+    // Load states for dropdown
+    const statesDropdown = document.getElementById('states-dropdown');
+    
+    if (statesDropdown) {
+        fetch('/data/states.json')
+            .then(response => response.json())
+            .then(states => {
+                const activeStates = states.filter(s => s.Is_Active === "TRUE").slice(0, 10);
+                let html = '<div class="dropdown-grid">';
+                
+                activeStates.forEach(state => {
+                    html += `<a href="/state/${state.Slug}" class="dropdown-item">${state.State_Name}</a>`;
+                });
+                
+                html += `<a href="/states.html" class="dropdown-item view-all">View All States →</a>`;
+                html += '</div>';
+                
+                statesDropdown.innerHTML = html;
+            })
+            .catch(() => {
+                statesDropdown.innerHTML = '<div class="dropdown-error">Unable to load states</div>';
+            });
+    }
+    
+    // Dropdown functionality
+    const dropdowns = document.querySelectorAll('.dropdown');
+    
+    dropdowns.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.dropdown-toggle');
+        const menu = dropdown.querySelector('.dropdown-menu');
+        
+        if (!toggle || !menu) return;
+        
+        // Hover for desktop
+        if (window.innerWidth > 768) {
+            dropdown.addEventListener('mouseenter', () => {
+                menu.style.display = 'block';
+                setTimeout(() => {
+                    menu.style.opacity = '1';
+                    menu.style.transform = 'translateY(0)';
+                }, 10);
+            });
+            
+            dropdown.addEventListener('mouseleave', () => {
+                menu.style.opacity = '0';
+                menu.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    menu.style.display = 'none';
+                }, 200);
+            });
+        } else {
+            // Click for mobile
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                const isVisible = menu.style.display === 'block';
+                
+                // Close all other dropdowns
+                document.querySelectorAll('.dropdown-menu').forEach(m => {
+                    if (m !== menu) {
+                        m.style.display = 'none';
+                    }
+                });
+                
+                menu.style.display = isVisible ? 'none' : 'block';
+                
+                // Toggle arrow rotation
+                const arrow = toggle.querySelector('.dropdown-arrow');
+                if (arrow) {
+                    arrow.style.transform = isVisible ? 'rotate(0)' : 'rotate(180deg)';
+                }
+            });
+        }
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.style.display = 'none';
+                
+                // Reset arrows
+                const toggle = menu.closest('.dropdown')?.querySelector('.dropdown-toggle');
+                const arrow = toggle?.querySelector('.dropdown-arrow');
+                if (arrow) {
+                    arrow.style.transform = 'rotate(0)';
+                }
+            });
+        }
+    });
+})();
+</script>
+
+<!-- CSS for Navigation -->
+<style>
+.secondary-nav {
+    background: var(--light-gray, #f8f9fa);
+    border-bottom: 1px solid #e9ecef;
+    position: relative;
+    z-index: 999;
+}
+
+.secondary-nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    gap: 2rem;
+}
+
+.secondary-nav-item {
+    position: relative;
+}
+
+.secondary-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.75rem 0;
+    color: var(--dark, #495057);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.secondary-nav-link:hover {
+    color: var(--primary-color, #2563eb);
+}
+
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    padding: 0.5rem 0;
+    min-width: 220px;
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+}
+
+.dropdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.25rem;
+    padding: 0.5rem;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--dark, #495057);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.dropdown-item:hover {
+    background: var(--light-gray, #f8f9fa);
+    color: var(--primary-color, #2563eb);
+}
+
+.view-all {
+    grid-column: span 2;
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-color, #2563eb);
+    border-top: 1px solid #e9ecef;
+    margin-top: 0.25rem;
+    padding-top: 0.75rem;
+}
+
+/* Quick Links */
+.quick-links {
+    margin-left: auto;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.quick-link {
+    color: var(--gray, #6c757d);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.quick-link:hover {
+    color: var(--primary-color, #2563eb);
+}
+
+/* Loading States */
+.dropdown-loading,
+.dropdown-error {
+    padding: 1rem;
+    text-align: center;
+    color: var(--gray, #6c757d);
+    font-size: 0.9rem;
+}
+
+.dropdown-error {
+    color: #dc3545;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .secondary-nav {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .secondary-nav-list {
+        gap: 1rem;
+    }
+    
+    .quick-links {
+        gap: 1rem;
+    }
+    
+    .quick-link {
+        font-size: 0.85rem;
+    }
+}
+</style>
