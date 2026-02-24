@@ -1,0 +1,443 @@
+<!-- Search Bar Component -->
+<div class="search-section">
+    <div class="container">
+        <div class="search-wrapper">
+            <!-- Main Search Form -->
+            <form class="search-form" id="main-search" action="/search.html" method="GET" role="search">
+                <div class="search-input-wrapper">
+                    <input type="text" 
+                           class="search-input" 
+                           name="q" 
+                           id="search-input"
+                           placeholder="Search by school name, city, or ZIP..." 
+                           aria-label="Search schools"
+                           autocomplete="off"
+                           required>
+                    
+                    <button type="submit" class="search-submit" aria-label="Submit search">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                    
+                    <button type="button" class="search-clear" id="search-clear" aria-label="Clear search" style="display: none;">
+                        ✕
+                    </button>
+                </div>
+                
+                <!-- Search Filters (Optional) -->
+                <div class="search-filters">
+                    <select name="state" class="filter-select" id="filter-state">
+                        <option value="">All States</option>
+                        <!-- States loaded dynamically -->
+                    </select>
+                    
+                    <select name="grade" class="filter-select" id="filter-grade">
+                        <option value="">All Grades</option>
+                        <option value="elementary">Elementary</option>
+                        <option value="middle">Middle</option>
+                        <option value="high">High</option>
+                        <option value="k-12">K-12</option>
+                    </select>
+                    
+                    <select name="type" class="filter-select" id="filter-type">
+                        <option value="">All Types</option>
+                        <option value="public">Public</option>
+                        <option value="charter">Charter</option>
+                        <option value="private">Private</option>
+                        <option value="magnet">Magnet</option>
+                    </select>
+                </div>
+            </form>
+            
+            <!-- Autocomplete Suggestions -->
+            <div class="search-suggestions" id="search-suggestions" style="display: none;"></div>
+            
+            <!-- Popular Searches -->
+            <div class="popular-searches">
+                <span class="popular-label">Popular:</span>
+                <div class="popular-tags" id="popular-tags">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mini Search Bar (for sidebars, etc) -->
+<div class="search-bar-mini" id="search-bar-mini-template" style="display: none;">
+    <form class="search-form-mini" action="/search.html" method="GET">
+        <div class="search-mini-wrapper">
+            <input type="text" name="q" class="search-mini-input" placeholder="Search schools...">
+            <button type="submit" class="search-mini-submit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- JavaScript for Search -->
+<script>
+(function() {
+    const searchInput = document.getElementById('search-input');
+    const searchClear = document.getElementById('search-clear');
+    const suggestions = document.getElementById('search-suggestions');
+    const filterState = document.getElementById('filter-state');
+    
+    let searchTimeout;
+    let schoolsData = [];
+    
+    // Load states for filter
+    if (filterState) {
+        fetch('/data/states.json')
+            .then(response => response.json())
+            .then(states => {
+                states.filter(s => s.Is_Active === "TRUE").forEach(state => {
+                    filterState.innerHTML += `<option value="${state.State_Code}">${state.State_Name}</option>`;
+                });
+            });
+    }
+    
+    // Load schools data for suggestions
+    fetch('/data/schools.json')
+        .then(response => response.json())
+        .then(schools => {
+            schoolsData = schools.filter(s => s.Is_Active === "TRUE");
+        });
+    
+    // Search input handler
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            // Show/hide clear button
+            if (searchClear) {
+                searchClear.style.display = query.length > 0 ? 'flex' : 'none';
+            }
+            
+            // Clear previous timeout
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 2) {
+                suggestions.style.display = 'none';
+                return;
+            }
+            
+            // Debounce search
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        });
+        
+        // Handle focus
+        searchInput.addEventListener('focus', function() {
+            if (this.value.trim().length >= 2) {
+                suggestions.style.display = 'block';
+            }
+        });
+        
+        // Close suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-wrapper')) {
+                suggestions.style.display = 'none';
+            }
+        });
+    }
+    
+    // Clear search
+    if (searchClear) {
+        searchClear.addEventListener('click', function() {
+            searchInput.value = '';
+            searchInput.focus();
+            suggestions.style.display = 'none';
+            this.style.display = 'none';
+        });
+    }
+    
+    // Perform search for suggestions
+    function performSearch(query) {
+        if (!schoolsData.length) return;
+        
+        query = query.toLowerCase();
+        
+        const results = schoolsData
+            .filter(school => 
+                school.School_Name.toLowerCase().includes(query) ||
+                school.City.toLowerCase().includes(query) ||
+                school.Zip.includes(query)
+            )
+            .slice(0, 5); // Limit to 5 suggestions
+        
+        if (results.length === 0) {
+            suggestions.innerHTML = '<div class="suggestion-item no-results">No schools found</div>';
+            suggestions.style.display = 'block';
+            return;
+        }
+        
+        let html = '';
+        results.forEach(school => {
+            html += `
+                <a href="/school/${school.Slug}" class="suggestion-item">
+                    <div class="suggestion-name">${school.School_Name}</div>
+                    <div class="suggestion-meta">${school.City}, ${school.State_Code} • ⭐ ${school.Rating}</div>
+                </a>
+            `;
+        });
+        
+        html += `<a href="/search.html?q=${encodeURIComponent(searchInput.value)}" class="suggestion-item view-all-suggestions">
+            View all results →
+        </a>`;
+        
+        suggestions.innerHTML = html;
+        suggestions.style.display = 'block';
+    }
+    
+    // Load popular searches
+    const popularTags = document.getElementById('popular-tags');
+    if (popularTags) {
+        const popular = [
+            'Lincoln High School',
+            'Washington Elementary',
+            'Top rated schools',
+            'New York',
+            'California'
+        ];
+        
+        popular.forEach(term => {
+            popularTags.innerHTML += `<a href="/search.html?q=${encodeURIComponent(term)}" class="popular-tag">${term}</a>`;
+        });
+    }
+})();
+</script>
+
+<!-- CSS for Search -->
+<style>
+.search-section {
+    background: linear-gradient(135deg, var(--primary-color, #2563eb), var(--secondary-color, #1e40af));
+    padding: 2rem 0;
+}
+
+.search-wrapper {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.search-form {
+    background: white;
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    outline: none;
+    background: transparent;
+}
+
+.search-submit {
+    background: none;
+    border: none;
+    padding: 0 1.5rem;
+    cursor: pointer;
+    color: var(--primary-color, #2563eb);
+    transition: transform 0.3s ease;
+}
+
+.search-submit:hover {
+    transform: scale(1.1);
+}
+
+.search-clear {
+    position: absolute;
+    right: 4rem;
+    background: none;
+    border: none;
+    color: var(--gray, #6c757d);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear:hover {
+    color: var(--dark, #333);
+}
+
+.search-filters {
+    display: flex;
+    gap: 1px;
+    background: #e9ecef;
+    padding: 0.5rem;
+}
+
+.filter-select {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    background: white;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+}
+
+/* Suggestions */
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    margin-top: 0.5rem;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.suggestion-item {
+    display: block;
+    padding: 1rem;
+    color: var(--dark, #333);
+    text-decoration: none;
+    border-bottom: 1px solid #e9ecef;
+    transition: background 0.3s ease;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: var(--light-gray, #f8f9fa);
+}
+
+.suggestion-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.suggestion-meta {
+    font-size: 0.85rem;
+    color: var(--gray, #6c757d);
+}
+
+.no-results {
+    color: var(--gray, #6c757d);
+    text-align: center;
+    padding: 2rem;
+}
+
+.view-all-suggestions {
+    font-weight: 600;
+    color: var(--primary-color, #2563eb);
+    text-align: center;
+}
+
+/* Popular Searches */
+.popular-searches {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+    flex-wrap: wrap;
+}
+
+.popular-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.popular-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.popular-tag {
+    color: white;
+    text-decoration: none;
+    padding: 0.25rem 1rem;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+}
+
+.popular-tag:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Mini Search */
+.search-bar-mini {
+    margin: 1rem 0;
+}
+
+.search-form-mini {
+    max-width: 300px;
+}
+
+.search-mini-wrapper {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 50px;
+    border: 1px solid #e9ecef;
+    overflow: hidden;
+}
+
+.search-mini-input {
+    flex: 1;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.search-mini-submit {
+    background: none;
+    border: none;
+    padding: 0 0.75rem;
+    color: var(--primary-color, #2563eb);
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search-filters {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .search-input {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .search-submit {
+        padding: 0 1rem;
+    }
+    
+    .popular-searches {
+        justify-content: center;
+    }
+}
+</style>
