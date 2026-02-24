@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Ratings & Reviews | [SITE_NAME]</title>
+    <meta name="description" content="Find detailed ratings, reviews, and performance data for schools across [DEFAULT_STATE]. Compare schools, read parent reviews, and make informed decisions.">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://[DOMAIN]/">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="School Ratings & Reviews">
+    <meta property="og:description" content="Comprehensive school ratings and parent reviews">
+    <meta property="og:url" content="https://[DOMAIN]/">
+    <meta property="og:type" content="website">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
+    
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json" id="organization-schema">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "[SITE_NAME]",
+        "url": "https://[DOMAIN]",
+        "logo": "https://[DOMAIN]/assets/images/logo.svg",
+        "sameAs": []
+    }
+    </script>
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header"></div>
+    
+    <main>
+        <!-- Hero Section with Search -->
+        <section class="hero">
+            <div class="container">
+                <h1>Find the Best School for Your Child</h1>
+                <p>Comprehensive ratings, parent reviews, and performance data</p>
+                <div id="search-bar"></div>
+                
+                <!-- Trust Badges -->
+                <div class="trust-indicators">
+                    <span class="badge">⚡ 10,000+ Schools</span>
+                    <span class="badge">📊 Government Data</span>
+                    <span class="badge">👪 50,000+ Parent Reviews</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Top Rated Schools Section -->
+        <section class="top-schools">
+            <div class="container">
+                <h2>Top Rated Schools</h2>
+                <div class="school-grid" id="top-schools-container">
+                    <!-- Dynamically populated via JS -->
+                </div>
+                <a href="/states.html" class="btn btn-primary">View All Schools →</a>
+            </div>
+        </section>
+        
+        <!-- By State Section -->
+        <section class="by-state">
+            <div class="container">
+                <h2>Browse Schools by State</h2>
+                <div class="state-grid" id="states-container">
+                    <!-- Dynamically populated via JS -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Recent Blog Posts -->
+        <section class="recent-blog">
+            <div class="container">
+                <h2>Latest from Our Blog</h2>
+                <div class="blog-grid" id="recent-posts-container">
+                    <!-- Dynamically populated via JS -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Lead Form -->
+        <section class="lead-section">
+            <div class="container">
+                <h2>Get Personalized School Recommendations</h2>
+                <p>Tell us what you're looking for and we'll help you find the perfect school</p>
+                <div id="lead-form"></div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer Component -->
+    <div id="footer"></div>
+    
+    <!-- Disclaimer Modal -->
+    <div id="disclaimer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="disclaimer-content"></div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Files -->
+    <script src="/js/config.js"></script>
+    <script src="/js/search.js"></script>
+    <script src="/js/lead-submit.js"></script>
+    <script src="/js/schema.js"></script>
+    
+    <!-- Components Loader -->
+    <script>
+        // Load HTML components
+        fetch('/components/header.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('header').innerHTML = data);
+            
+        fetch('/components/search-bar.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('search-bar').innerHTML = data);
+            
+        fetch('/components/footer.html')
+            .then(response => response.text())
+            .then(data => document.getElementById('footer').innerHTML = data);
+            
+        // Load disclaimer content
+        fetch('/data/disclaimer.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('disclaimer-content').innerHTML = data.homepage;
+            });
+    </script>
+    
+    <!-- Dynamic Data Loader -->
+    <script>
+        // Load top schools
+        fetch('/data/schools.json')
+            .then(response => response.json())
+            .then(schools => {
+                const topSchools = schools
+                    .filter(s => s.Is_Active === "TRUE")
+                    .sort((a, b) => b.Rating - a.Rating)
+                    .slice(0, 6);
+                    
+                const container = document.getElementById('top-schools-container');
+                topSchools.forEach(school => {
+                    fetch('/components/school-card.html')
+                        .then(response => response.text())
+                        .then(template => {
+                            let html = template
+                                .replace(/\[SCHOOL_NAME\]/g, school.School_Name)
+                                .replace(/\[SCHOOL_SLUG\]/g, school.Slug)
+                                .replace(/\[RATING\]/g, school.Rating)
+                                .replace(/\[CITY\]/g, school.City)
+                                .replace(/\[GRADE_LEVEL\]/g, school.Grade_Level);
+                            container.innerHTML += html;
+                        });
+                });
+            });
+            
+        // Load states
+        fetch('/data/states.json')
+            .then(response => response.json())
+            .then(states => {
+                const container = document.getElementById('states-container');
+                states.filter(s => s.Is_Active === "TRUE").forEach(state => {
+                    container.innerHTML += `
+                        <a href="/state/${state.Slug}" class="state-card">
+                            <h3>${state.State_Name}</h3>
+                            <p>${state.Total_Schools} Schools</p>
+                        </a>
+                    `;
+                });
+            });
+    </script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=[GA4_ID]"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '[GA4_ID]');
+    </script>
+</body>
+</html>
