@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[POST_TITLE] | [SITE_NAME] Blog</title>
+    <meta name="description" content="[META_DESCRIPTION]">
+    
+    <link rel="canonical" href="https://[DOMAIN]/blog/[POST_SLUG]">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="[POST_TITLE]">
+    <meta property="og:description" content="[META_DESCRIPTION]">
+    <meta property="og:image" content="[FEATURED_IMAGE]">
+    <meta property="og:url" content="https://[DOMAIN]/blog/[POST_SLUG]">
+    
+    <!-- Article Schema -->
+    <script type="application/ld+json" id="article-schema"></script>
+</head>
+<body>
+    <div id="header"></div>
+    <div id="navigation"></div>
+    
+    <main>
+        <article class="blog-post">
+            <div class="container">
+                <header class="post-header">
+                    <h1 id="post-title"></h1>
+                    <div class="post-meta" id="post-meta"></div>
+                </header>
+                
+                <div class="post-featured-image" id="post-image"></div>
+                
+                <div class="post-content" id="post-content"></div>
+                
+                <div class="post-footer">
+                    <div class="post-categories" id="post-categories"></div>
+                    <div class="post-share">
+                        <h4>Share this article:</h4>
+                        <a href="#" onclick="shareOnFacebook()">Facebook</a>
+                        <a href="#" onclick="shareOnTwitter()">Twitter</a>
+                        <a href="#" onclick="shareOnLinkedIn()">LinkedIn</a>
+                    </div>
+                </div>
+                
+                <!-- Related Posts -->
+                <section class="related-posts">
+                    <h2>Related Articles</h2>
+                    <div class="blog-grid" id="related-posts"></div>
+                </section>
+                
+                <!-- Comments Section (Premium) -->
+                <section class="post-comments">
+                    <h2>Comments <span class="premium-badge">PREMIUM</span></h2>
+                    <div class="premium-teaser" id="premium-comments"></div>
+                </section>
+            </div>
+        </article>
+    </main>
+    
+    <div id="footer"></div>
+    
+    <script src="/js/config.js"></script>
+    
+    <script>
+        const postSlug = window.location.pathname.split('/').pop();
+        
+        fetch('/data/blog.json')
+            .then(response => response.json())
+            .then(posts => {
+                const post = posts.find(p => p.Slug === postSlug);
+                if (!post) {
+                    window.location.href = '/404.html';
+                    return;
+                }
+                
+                // Update page metadata
+                document.title = document.title.replace('[POST_TITLE]', post.Title);
+                document.querySelector('meta[name="description"]').content = post.Meta_Description;
+                
+                // Populate content
+                document.getElementById('post-title').textContent = post.Title;
+                document.getElementById('post-meta').innerHTML = `
+                    <span class="post-date">${Utils.formatDate(post.Published_Date)}</span>
+                    <span class="post-category">${post.Category}</span>
+                `;
+                document.getElementById('post-image').innerHTML = `<img src="${post.Featured_Image || '/assets/images/default-blog.jpg'}" alt="${post.Title}">`;
+                document.getElementById('post-content').innerHTML = post.Content_HTML;
+                document.getElementById('post-categories').innerHTML = `<strong>Category:</strong> ${post.Category}`;
+                
+                // Update schema
+                const schema = {
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    "headline": post.Title,
+                    "description": post.Meta_Description,
+                    "image": post.Featured_Image,
+                    "datePublished": post.Published_Date,
+                    "author": {
+                        "@type": "Organization",
+                        "name": "[SITE_NAME]",
+                        "url": "https://[DOMAIN]"
+                    }
+                };
+                document.getElementById('article-schema').innerHTML = JSON.stringify(schema);
+                
+                // Load related posts
+                const related = posts.filter(p => 
+                    p.Category === post.Category && 
+                    p.Slug !== post.Slug && 
+                    p.Status === 'published'
+                ).slice(0, 3);
+                
+                const relatedContainer = document.getElementById('related-posts');
+                related.forEach(p => {
+                    relatedContainer.innerHTML += `
+                        <div class="blog-card">
+                            <img src="${p.Featured_Image || '/assets/images/default-blog.jpg'}" alt="${p.Title}">
+                            <div class="blog-card-content">
+                                <h3><a href="/blog/${p.Slug}">${p.Title}</a></h3>
+                                <p>${p.Meta_Description.substring(0, 80)}...</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+            
+        // Share functions
+        window.shareOnFacebook = () => {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`);
+        };
+        
+        window.shareOnTwitter = () => {
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(document.title)}`);
+        };
+        
+        window.shareOnLinkedIn = () => {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`);
+        };
+        
+        // Load components
+        fetch('/components/header.html').then(r=>r.text()).then(d=>document.getElementById('header').innerHTML=d);
+        fetch('/components/navigation.html').then(r=>r.text()).then(d=>document.getElementById('navigation').innerHTML=d);
+        fetch('/components/footer.html').then(r=>r.text()).then(d=>document.getElementById('footer').innerHTML=d);
+        fetch('/components/premium-box.html').then(r=>r.text()).then(d=>document.getElementById('premium-comments').innerHTML=d);
+    </script>
+</body>
+</html>
