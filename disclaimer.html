@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disclaimer | [SITE_NAME]</title>
+    <meta name="description" content="Important disclaimers about our school ratings, data sources, and affiliations. Understand how we collect and present school information.">
+    
+    <link rel="canonical" href="https://[DOMAIN]/disclaimer.html">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    
+    <meta property="og:title" content="Disclaimer | [SITE_NAME]">
+    <meta property="og:description" content="Important information about our school data and affiliations">
+    <meta property="og:url" content="https://[DOMAIN]/disclaimer.html">
+</head>
+<body>
+    <div id="header"></div>
+    <div id="navigation"></div>
+    
+    <main class="legal-page">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="/">Home</a> > <span>Disclaimer</span>
+            </nav>
+            
+            <div class="page-header">
+                <h1>Disclaimer</h1>
+                <p class="last-updated">Last Updated: <span id="last-updated-date">January 1, 2024</span></p>
+            </div>
+            
+            <div class="legal-content disclaimer-content" id="disclaimer-content">
+                <div class="loading-spinner">Loading disclaimer...</div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="footer"></div>
+    <div id="disclaimer-banner"></div>
+    
+    <script src="/js/config.js"></script>
+    
+    <script>
+        Promise.all([
+            fetch('/components/header.html').then(r => r.text()),
+            fetch('/components/navigation.html').then(r => r.text()),
+            fetch('/components/footer.html').then(r => r.text())
+        ]).then(([header, nav, footer]) => {
+            document.getElementById('header').innerHTML = header;
+            document.getElementById('navigation').innerHTML = nav;
+            document.getElementById('footer').innerHTML = footer;
+        });
+        
+        // Load disclaimer content
+        fetch(`${CONFIG.API_BASE}?action=getLegalContent&type=disclaimer`)
+            .then(response => response.json())
+            .then(data => {
+                const contentDiv = document.getElementById('disclaimer-content');
+                
+                if (data && data.content) {
+                    contentDiv.innerHTML = data.content;
+                    if (data.last_updated) {
+                        document.getElementById('last-updated-date').textContent = 
+                            Utils.formatDate(data.last_updated);
+                    }
+                } else {
+                    contentDiv.innerHTML = getFallbackDisclaimerContent();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading disclaimer:', error);
+                document.getElementById('disclaimer-content').innerHTML = getFallbackDisclaimerContent();
+            });
+            
+        function getFallbackDisclaimerContent() {
+            return `
+                <div class="disclaimer-box">
+                    <h2>Website Disclaimer</h2>
+                    <p>The information provided by [SITE_NAME] ("we," "us," or "our") on [DOMAIN] (the "Site") is for general informational purposes only. All information on the Site is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the Site.</p>
+                </div>
+                
+                <section>
+                    <h2>Not Affiliated with Government Entities</h2>
+                    <p><strong>[SITE_NAME] is NOT affiliated with, endorsed by, or connected to any government agency, state Department of Education, or any school district.</strong> We are an independent platform that aggregates publicly available data to help parents make informed decisions.</p>
+                    <p>Our ratings and reviews are based on our proprietary algorithm and user contributions, not official government evaluations.</p>
+                </section>
+                
+                <section>
+                    <h2>Data Sources</h2>
+                    <p>We collect data from various public sources including:</p>
+                    <ul>
+                        <li>State Departments of Education</li>
+                        <li>National Center for Education Statistics (NCES)</li>
+                        <li>Civil Rights Data Collection (CRDC)</li>
+                        <li>Publicly available school reports</li>
+                    </ul>
+                    <p>While we strive to keep the information accurate and up-to-date, we cannot guarantee that all data is current or error-free. Data may be delayed, incomplete, or contain inaccuracies.</p>
+                </section>
+                
+                <section>
+                    <h2>Rating Methodology</h2>
+                    <p>Our school ratings are calculated using a proprietary algorithm that considers multiple factors:</p>
+                    <ul>
+                        <li>Test scores (Math and Reading proficiency)</li>
+                        <li>Student-teacher ratios</li>
+                        <li>Graduation rates</li>
+                        <li>College readiness indicators</li>
+                        <li>Parent reviews and ratings</li>
+                        <li>Demographic diversity</li>
+                    </ul>
+                    <p>These ratings are our opinion based on available data and should not be considered official or definitive assessments of school quality.</p>
+                </section>
+                
+                <section>
+                    <h2>User Reviews</h2>
+                    <p>Parent reviews and comments on our site represent the opinions of individual users and do not reflect the views of [SITE_NAME]. We do not verify the accuracy of user reviews and are not responsible for any claims made in user-generated content.</p>
+                </section>
+                
+                <section>
+                    <h2>No Professional Advice</h2>
+                    <p>The information on this Site is not intended as, and shall not be understood or construed as, professional advice. While we provide data and ratings about schools, you should not rely on this information as a substitute for professional consultation with educational advisors, school administrators, or other qualified professionals.</p>
+                </section>
+                
+                <section>
+                    <h2>External Links Disclaimer</h2>
+                    <p>The Site may contain (or you may be sent through the Site) links to other websites or content belonging to or originating from third parties. Such external links are not investigated, monitored, or checked for accuracy, adequacy, validity, reliability, availability, or completeness by us.</p>
+                </section>
+                
+                <section>
+                    <h2>Testimonials Disclaimer</h2>
+                    <p>The Site may contain testimonials from users of our products and services. These testimonials reflect the real-life experiences and opinions of such users. However, these experiences are personal to those particular users, and may not be representative of all users of our products and services.</p>
+                </section>
+                
+                <section>
+                    <h2>Fair Use Disclaimer</h2>
+                    <p>This site may contain copyrighted material the use of which has not always been specifically authorized by the copyright owner. We are making such material available for purposes of criticism, comment, news reporting, teaching, scholarship, or research. We believe this constitutes a "fair use" of any such copyrighted material as provided for in section 107 of the US Copyright Law.</p>
+                </section>
+                
+                <section>
+                    <h2>No Responsibility</h2>
+                    <p>In no event shall [SITE_NAME] be liable for any special, direct, indirect, consequential, or incidental damages or any damages whatsoever, whether in an action of contract, negligence or other tort, arising out of or in connection with the use of the Service or the contents of the Service. [SITE_NAME] reserves the right to make additions, deletions, or modification to the contents on the Service at any time without prior notice.</p>
+                </section>
+                
+                <section>
+                    <h2>"Use at Your Own Risk" Disclaimer</h2>
+                    <p>All information in the Site is provided "as is", with no guarantee of completeness, accuracy, timeliness or of the results obtained from the use of this information, and without warranty of any kind, express or implied, including, but not limited to warranties of performance, merchantability, and fitness for a particular purpose.</p>
+                    <p>We will not be liable to you or anyone else for any decision made or action taken in reliance on the information given by the Site or for any consequential, special or similar damages, even if advised of the possibility of such damages.</p>
+                </section>
+                
+                <section>
+                    <h2>Contact Us</h2>
+                    <p>If you have any questions about this Disclaimer, please contact us:</p>
+                    <ul>
+                        <li>By email: <a href="mailto:[LEAD_NOTIFICATION_EMAIL]">[LEAD_NOTIFICATION_EMAIL]</a></li>
+                        <li>By visiting our <a href="/contact.html">Contact Page</a></li>
+                    </ul>
+                </section>
+            `;
+        }
+        
+        // Load disclaimer banner
+        fetch('/data/disclaimers.json')
+            .then(r => r.json())
+            .then(disclaimers => {
+                const disclaimer = disclaimers?.find(d => d.Page_Type === 'disclaimer') || 
+                                 disclaimers?.find(d => d.Page_Type === 'default');
+                if (disclaimer) {
+                    document.getElementById('disclaimer-banner').innerHTML = disclaimer.Content_HTML;
+                }
+            });
+    </script>
+</body>
+</html>
