@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Schools - Side by Side Analysis | [SITE_NAME]</title>
+    <meta name="description" content="Compare up to 3 schools side by side. Analyze test scores, ratings, student-teacher ratios, and more to find the best fit for your child.">
+    
+    <link rel="canonical" href="https://[DOMAIN]/compare.html">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/comparison.css">
+</head>
+<body>
+    <div id="header"></div>
+    <div id="navigation"></div>
+    
+    <main>
+        <div class="container">
+            <h1>Compare Schools Side by Side</h1>
+            
+            <div class="comparison-tool">
+                <!-- School Selector -->
+                <div class="school-selector">
+                    <div class="select-school" id="school1-select">
+                        <select id="school1" class="school-dropdown">
+                            <option value="">Select first school...</option>
+                        </select>
+                    </div>
+                    <div class="vs-badge">VS</div>
+                    <div class="select-school" id="school2-select">
+                        <select id="school2" class="school-dropdown">
+                            <option value="">Select second school...</option>
+                        </select>
+                    </div>
+                    <button id="compare-btn" class="btn btn-primary">Compare</button>
+                </div>
+                
+                <!-- Comparison Results -->
+                <div id="comparison-results" style="display: none;">
+                    <!-- Dynamic comparison table will be inserted here -->
+                </div>
+                
+                <!-- Premium Teaser for 3+ Schools -->
+                <div id="premium-comparison-teaser" class="premium-teaser" style="display: none;">
+                    <h3>Compare More Schools with Premium</h3>
+                    <p>Upgrade to compare up to 5 schools and access detailed analysis</p>
+                    <div id="premium-box-compare"></div>
+                </div>
+            </div>
+            
+            <!-- Pre-computed Comparisons -->
+            <section class="popular-comparisons">
+                <h2>Popular School Comparisons</h2>
+                <div id="popular-comparisons-container"></div>
+            </section>
+        </div>
+    </main>
+    
+    <div id="footer"></div>
+    
+    <script src="/js/config.js"></script>
+    <script src="/js/comparison.js"></script>
+    
+    <script>
+        let allSchools = [];
+        
+        // Load schools for dropdowns
+        fetch('/data/schools.json')
+            .then(response => response.json())
+            .then(schools => {
+                allSchools = schools.filter(s => s.Is_Active === "TRUE");
+                const dropdowns = ['school1', 'school2'];
+                
+                dropdowns.forEach(id => {
+                    const select = document.getElementById(id);
+                    allSchools.sort((a,b) => a.School_Name.localeCompare(b.School_Name)).forEach(school => {
+                        select.innerHTML += `<option value="${school.School_ID}">${school.School_Name} - ${school.City}, ${school.State_Code}</option>`;
+                    });
+                });
+            });
+            
+        // Handle comparison
+        document.getElementById('compare-btn').addEventListener('click', () => {
+            const school1Id = document.getElementById('school1').value;
+            const school2Id = document.getElementById('school2').value;
+            
+            if (!school1Id || !school2Id) {
+                alert('Please select two schools to compare');
+                return;
+            }
+            
+            const school1 = allSchools.find(s => s.School_ID === school1Id);
+            const school2 = allSchools.find(s => s.School_ID === school2Id);
+            
+            displayComparison(school1, school2);
+        });
+        
+        function displayComparison(s1, s2) {
+            const container = document.getElementById('comparison-results');
+            container.style.display = 'block';
+            
+            container.innerHTML = `
+                <h2>Comparison: ${s1.School_Name} vs ${s2.School_Name}</h2>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th>Metric</th>
+                        <th class="${getWinner(s1.Rating, s2.Rating)}">${s1.School_Name}</th>
+                        <th class="${getWinner(s2.Rating, s1.Rating)}">${s2.School_Name}</th>
+                    </tr>
+                    <tr>
+                        <td>Overall Rating</td>
+                        <td class="${getWinner(s1.Rating, s2.Rating)}">⭐ ${s1.Rating}/5</td>
+                        <td class="${getWinner(s2.Rating, s1.Rating)}">⭐ ${s2.Rating}/5</td>
+                    </tr>
+                    <tr>
+                        <td>Location</td>
+                        <td>${s1.City}, ${s1.State_Code}</td>
+                        <td>${s2.City}, ${s2.State_Code}</td>
+                    </tr>
+                    <tr>
+                        <td>School Type</td>
+                        <td>${s1.School_Type}</td>
+                        <td>${s2.School_Type}</td>
+                    </tr>
+                    <tr>
+                        <td>Grades</td>
+                        <td>${s1.Grade_Level}</td>
+                        <td>${s2.Grade_Level}</td>
+                    </tr>
+                    <tr>
+                        <td>Student Count</td>
+                        <td class="${getWinner(s1.Student_Count, s2.Student_Count, 'lower')}">${s1.Student_Count}</td>
+                        <td class="${getWinner(s2.Student_Count, s1.Student_Count, 'lower')}">${s2.Student_Count}</td>
+                    </tr>
+                    <tr>
+                        <td>Student-Teacher Ratio</td>
+                        <td class="${getWinner(s1.Student_Teacher_Ratio, s2.Student_Teacher_Ratio, 'lower')}">${s1.Student_Teacher_Ratio}:1</td>
+                        <td class="${getWinner(s2.Student_Teacher_Ratio, s1.Student_Teacher_Ratio, 'lower')}">${s2.Student_Teacher_Ratio}:1</td>
+                    </tr>
+                    <tr>
+                        <td>Math Score</td>
+                        <td class="${getWinner(s1.Math_Score, s2.Math_Score)}">${s1.Math_Score}%</td>
+                        <td class="${getWinner(s2.Math_Score, s1.Math_Score)}">${s2.Math_Score}%</td>
+                    </tr>
+                    <tr>
+                        <td>Reading Score</td>
+                        <td class="${getWinner(s1.Reading_Score, s2.Reading_Score)}">${s1.Reading_Score}%</td>
+                        <td class="${getWinner(s2.Reading_Score, s1.Reading_Score)}">${s2.Reading_Score}%</td>
+                    </tr>
+                    <tr>
+                        <td>Graduation Rate</td>
+                        <td class="${getWinner(s1.Graduation_Rate, s2.Graduation_Rate)}">${s1.Graduation_Rate}%</td>
+                        <td class="${getWinner(s2.Graduation_Rate, s1.Graduation_Rate)}">${s2.Graduation_Rate}%</td>
+                    </tr>
+                    <tr>
+                        <td>National Rank</td>
+                        <td class="${getWinner(s1.National_Rank, s2.National_Rank, 'lower')}">#${s1.National_Rank}</td>
+                        <td class="${getWinner(s2.National_Rank, s1.National_Rank, 'lower')}">#${s2.National_Rank}</td>
+                    </tr>
+                </table>
+                
+                <div class="comparison-summary">
+                    <h3>Summary</h3>
+                    <p>${generateSummary(s1, s2)}</p>
+                </div>
+            `;
+            
+            // Track comparison
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'school_comparison', {
+                    'school1': s1.School_Name,
+                    'school2': s2.School_Name
+                });
+            }
+        }
+        
+        function getWinner(val1, val2, type = 'higher') {
+            if (type === 'higher') {
+                return val1 > val2 ? 'winner' : (val1 < val2 ? 'loser' : 'tie');
+            } else {
+                return val1 < val2 ? 'winner' : (val1 > val2 ? 'loser' : 'tie');
+            }
+        }
+        
+        function generateSummary(s1, s2) {
+            let summary = [];
+            
+            if (s1.Rating > s2.Rating) {
+                summary.push(`${s1.School_Name} has a higher overall rating (${s1.Rating} vs ${s2.Rating}).`);
+            } else if (s2.Rating > s1.Rating) {
+                summary.push(`${s2.School_Name} has a higher overall rating (${s2.Rating} vs ${s1.Rating}).`);
+            }
+            
+            if (s1.Math_Score > s2.Math_Score) {
+                summary.push(`${s1.School_Name} performs better in math (${s1.Math_Score}% vs ${s2.Math_Score}%).`);
+            } else if (s2.Math_Score > s1.Math_Score) {
+                summary.push(`${s2.School_Name} performs better in math (${s2.Math_Score}% vs ${s1.Math_Score}%).`);
+            }
+            
+            if (s1.Student_Teacher_Ratio < s2.Student_Teacher_Ratio) {
+                summary.push(`${s1.School_Name} has a better student-teacher ratio (${s1.Student_Teacher_Ratio}:1 vs ${s2.Student_Teacher_Ratio}:1).`);
+            } else if (s2.Student_Teacher_Ratio < s1.Student_Teacher_Ratio) {
+                summary.push(`${s2.School_Name} has a better student-teacher ratio (${s2.Student_Teacher_Ratio}:1 vs ${s1.Student_Teacher_Ratio}:1).`);
+            }
+            
+            return summary.join(' ');
+        }
+        
+        // Load components
+        fetch('/components/header.html').then(r=>r.text()).then(d=>document.getElementById('header').innerHTML=d);
+        fetch('/components/navigation.html').then(r=>r.text()).then(d=>document.getElementById('navigation').innerHTML=d);
+        fetch('/components/footer.html').then(r=>r.text()).then(d=>document.getElementById('footer').innerHTML=d);
+        fetch('/components/premium-box.html').then(r=>r.text()).then(d=>document.getElementById('premium-box-compare').innerHTML=d);
+    </script>
+</body>
+</html>
