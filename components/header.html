@@ -1,0 +1,429 @@
+<!-- Header Component - School Ratings Site -->
+<header class="site-header">
+    <div class="container">
+        <div class="header-wrapper">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <a href="/" class="logo-link" aria-label="[SITE_NAME] - Home">
+                    <img src="/assets/images/logo.svg" alt="[SITE_NAME] Logo" class="logo" width="180" height="50">
+                    <span class="site-name">[SITE_NAME]</span>
+                </a>
+            </div>
+
+            <!-- Main Navigation (Desktop) -->
+            <nav class="main-nav desktop-nav" aria-label="Main Navigation">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="/states.html" class="nav-link">States</a></li>
+                    <li class="nav-item"><a href="/blog.html" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="/methodology.html" class="nav-link">Methodology</a></li>
+                    <li class="nav-item"><a href="/contact.html" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <!-- Search Toggle (Mobile) -->
+                <button class="search-toggle mobile-only" id="search-toggle" aria-label="Toggle search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+
+                <!-- Premium Button -->
+                <a href="/premium.html" class="btn btn-premium btn-small">
+                    <span class="premium-icon">⭐</span>
+                    <span class="premium-text">Premium</span>
+                </a>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="menu-toggle mobile-only" id="menu-toggle" aria-label="Toggle menu">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation (Hidden by default) -->
+        <div class="mobile-nav-container" id="mobile-nav" style="display: none;">
+            <nav class="mobile-nav" aria-label="Mobile Navigation">
+                <ul class="mobile-nav-list">
+                    <li class="mobile-nav-item"><a href="/" class="mobile-nav-link">Home</a></li>
+                    <li class="mobile-nav-item"><a href="/states.html" class="mobile-nav-link">States</a></li>
+                    <li class="mobile-nav-item"><a href="/blog.html" class="mobile-nav-link">Blog</a></li>
+                    <li class="mobile-nav-item"><a href="/methodology.html" class="mobile-nav-link">Methodology</a></li>
+                    <li class="mobile-nav-item"><a href="/contact.html" class="mobile-nav-link">Contact</a></li>
+                    <li class="mobile-nav-item"><a href="/premium.html" class="mobile-nav-link premium-link">⭐ Premium</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Announcement Bar (Optional) -->
+    <div class="announcement-bar" id="announcement-bar" style="display: none;">
+        <div class="container">
+            <p class="announcement-text">
+                <span class="announcement-icon">📢</span>
+                <span class="announcement-message">New: Compare up to 3 schools with our premium feature!</span>
+                <a href="/premium.html" class="announcement-link">Learn more →</a>
+            </p>
+            <button class="announcement-close" aria-label="Close announcement">✕</button>
+        </div>
+    </div>
+</header>
+
+<!-- JavaScript for Header -->
+<script>
+(function() {
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    
+    if (menuToggle && mobileNav) {
+        menuToggle.addEventListener('click', function() {
+            const isVisible = mobileNav.style.display === 'block';
+            mobileNav.style.display = isVisible ? 'none' : 'block';
+            menuToggle.classList.toggle('active', !isVisible);
+            
+            // Announce for screen readers
+            const expanded = menuToggle.getAttribute('aria-expanded') === 'true' ? 'false' : 'true';
+            menuToggle.setAttribute('aria-expanded', expanded);
+        });
+    }
+    
+    // Search toggle
+    const searchToggle = document.getElementById('search-toggle');
+    if (searchToggle) {
+        searchToggle.addEventListener('click', function() {
+            // Trigger search bar focus (handled in search-bar component)
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        });
+    }
+    
+    // Announcement bar close
+    const announcementClose = document.querySelector('.announcement-close');
+    const announcementBar = document.getElementById('announcement-bar');
+    
+    if (announcementClose && announcementBar) {
+        announcementClose.addEventListener('click', function() {
+            announcementBar.style.display = 'none';
+            // Save preference in localStorage
+            localStorage.setItem('announcement-closed', 'true');
+        });
+        
+        // Check if announcement was previously closed
+        if (localStorage.getItem('announcement-closed') === 'true') {
+            announcementBar.style.display = 'none';
+        } else {
+            announcementBar.style.display = 'block';
+        }
+    }
+    
+    // Sticky header on scroll
+    const header = document.querySelector('.site-header');
+    let lastScroll = 0;
+    
+    window.addEventListener('scroll', function() {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 100) {
+            header.classList.add('sticky');
+        } else {
+            header.classList.remove('sticky');
+        }
+        
+        lastScroll = currentScroll;
+    });
+})();
+</script>
+
+<!-- CSS for Header -->
+<style>
+.site-header {
+    background: var(--white, #ffffff);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+    width: 100%;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.site-header.sticky {
+    position: sticky;
+    top: 0;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+.header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+
+/* Logo */
+.logo-section {
+    flex-shrink: 0;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 0.5rem;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
+}
+
+.site-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color, #2563eb);
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .site-name {
+        display: inline;
+    }
+}
+
+/* Navigation */
+.main-nav {
+    flex: 1;
+    margin: 0 2rem;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: var(--dark, #333);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary-color, #2563eb);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color, #2563eb);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-premium {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+}
+
+.premium-icon {
+    font-size: 1.1rem;
+}
+
+/* Mobile Toggles */
+.menu-toggle,
+.search-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark, #333);
+}
+
+.hamburger-line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: currentColor;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+
+.menu-toggle.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(4px, 4px);
+}
+
+.menu-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Mobile Navigation */
+.mobile-nav-container {
+    background: var(--white, #ffffff);
+    border-top: 1px solid var(--light-gray, #f0f0f0);
+    padding: 1rem 0;
+}
+
+.mobile-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mobile-nav-item {
+    border-bottom: 1px solid var(--light-gray, #f0f0f0);
+}
+
+.mobile-nav-item:last-child {
+    border-bottom: none;
+}
+
+.mobile-nav-link {
+    display: block;
+    padding: 0.75rem 0;
+    color: var(--dark, #333);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.mobile-nav-link:hover {
+    color: var(--primary-color, #2563eb);
+}
+
+.premium-link {
+    color: #e67e22;
+    font-weight: 600;
+}
+
+/* Announcement Bar */
+.announcement-bar {
+    background: var(--primary-color, #2563eb);
+    color: white;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.announcement-bar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.announcement-text {
+    margin: 0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.announcement-icon {
+    font-size: 1rem;
+}
+
+.announcement-link {
+    color: white;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.announcement-link:hover {
+    text-decoration: none;
+}
+
+.announcement-close {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 0.5rem;
+    opacity: 0.8;
+}
+
+.announcement-close:hover {
+    opacity: 1;
+}
+
+/* Utility Classes */
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .desktop-nav {
+        display: none;
+    }
+    
+    .mobile-only {
+        display: flex;
+    }
+    
+    .btn-premium .premium-text {
+        display: none;
+    }
+    
+    .btn-premium .premium-icon {
+        font-size: 1.2rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-nav-container {
+        display: none !important;
+    }
+}
+</style>
