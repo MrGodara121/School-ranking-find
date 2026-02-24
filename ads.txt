@@ -1,0 +1,48 @@
+# ads.txt file for [DOMAIN]
+# Last updated: [CURRENT_DATE]
+
+# ============================================
+# Google AdSense
+# ============================================
+google.com, pub-[ADSENSE_ID], DIRECT, f08c47fec0942fa0
+
+# ============================================
+# Additional Ad Networks (uncomment if needed)
+# ============================================
+
+# Media.net
+# medianet.com, [MEDIANET_ID], DIRECT
+
+# Ezoic
+# ezoic.com, [EZOIC_ID], DIRECT
+
+# Amazon Publisher Services
+# amazon.com, [AMAZON_ID], DIRECT
+
+# AdThrive
+# adthrive.com, [ADTHRIVE_ID], DIRECT
+
+# Mediavine
+# mediavine.com, [MEDIAVINE_ID], DIRECT
+
+# ============================================
+# Resellers (if you use multiple networks)
+# ============================================
+
+# Example Reseller (for Google)
+# google.com, pub-[ADSENSE_ID], RESELLER, f08c47fec0942fa0
+
+# ============================================
+# Certification Authority IDs
+# ============================================
+# Google AdSense Certification ID: f08c47fec0942fa0
+
+# ============================================
+# Notes
+# ============================================
+# Replace [ADSENSE_ID] with your actual AdSense publisher ID
+# Format: pub-XXXXXXXXXXXXXXXX
+# Example: google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0
+
+# Verify this file at: https://adstxt.guide/
+# Google Search Console will validate this file automatically
