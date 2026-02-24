@@ -1,0 +1,443 @@
+<!-- School Card Component - Reusable card for displaying school information -->
+<div class="school-card" data-school-id="[SCHOOL_ID]">
+    <!-- Card Header -->
+    <div class="card-header">
+        <h3 class="school-name">
+            <a href="/school/[SCHOOL_SLUG]" class="school-link">[SCHOOL_NAME]</a>
+        </h3>
+        
+        <!-- Rating Badge -->
+        <div class="rating-badge" aria-label="Rating: [RATING] out of 5 stars">
+            <span class="rating-stars">
+                <!-- Stars generated dynamically -->
+                <span class="stars-container" data-rating="[RATING]"></span>
+            </span>
+            <span class="rating-value">[RATING]</span>
+        </div>
+    </div>
+    
+    <!-- School Location -->
+    <div class="school-location">
+        <svg class="location-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        <span class="location-text">[CITY], [STATE_CODE] [ZIP]</span>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="quick-stats">
+        <div class="stat" title="Grade Level">
+            <span class="stat-label">Grades:</span>
+            <span class="stat-value">[GRADE_LEVEL]</span>
+        </div>
+        
+        <div class="stat" title="School Type">
+            <span class="stat-label">Type:</span>
+            <span class="stat-value">[SCHOOL_TYPE]</span>
+        </div>
+        
+        <div class="stat" title="Student Count">
+            <span class="stat-label">Students:</span>
+            <span class="stat-value">[STUDENT_COUNT]</span>
+        </div>
+        
+        <div class="stat" title="Student-Teacher Ratio">
+            <span class="stat-label">Ratio:</span>
+            <span class="stat-value">[STUDENT_TEACHER_RATIO]:1</span>
+        </div>
+    </div>
+    
+    <!-- Test Scores Preview -->
+    <div class="scores-preview">
+        <div class="score-item">
+            <span class="score-label">Math:</span>
+            <div class="score-bar">
+                <div class="score-fill" style="width: [MATH_SCORE]%"></div>
+            </div>
+            <span class="score-value">[MATH_SCORE]%</span>
+        </div>
+        
+        <div class="score-item">
+            <span class="score-label">Reading:</span>
+            <div class="score-bar">
+                <div class="score-fill" style="width: [READING_SCORE]%"></div>
+            </div>
+            <span class="score-value">[READING_SCORE]%</span>
+        </div>
+    </div>
+    
+    <!-- Card Footer -->
+    <div class="card-footer">
+        <!-- Graduation Rate (if available) -->
+        <div class="grad-rate" title="Graduation Rate">
+            <span class="grad-label">Graduation:</span>
+            <span class="grad-value">[GRADUATION_RATE]%</span>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="card-actions">
+            <a href="/school/[SCHOOL_SLUG]" class="btn-view">
+                View Details
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+            
+            <button class="btn-compare" data-school-id="[SCHOOL_ID]" onclick="addToCompare('[SCHOOL_ID]')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M16 16v4M12 12v8M8 8v12M4 4v16"/>
+                </svg>
+                <span class="compare-text">Compare</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Premium Badge (if applicable) -->
+    <div class="premium-badge-card" style="display: none;" data-premium="false">
+        <span>⭐ PREMIUM</span>
+    </div>
+</div>
+
+<!-- JavaScript for School Card -->
+<script>
+(function() {
+    // Initialize all school cards on the page
+    document.querySelectorAll('.school-card').forEach(card => {
+        // Generate star ratings
+        const starsContainer = card.querySelector('.stars-container');
+        if (starsContainer) {
+            const rating = parseFloat(starsContainer.dataset.rating) || 0;
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            let starsHTML = '';
+            
+            // Full stars
+            for (let i = 0; i < fullStars; i++) {
+                starsHTML += '<span class="star full">★</span>';
+            }
+            
+            // Half star
+            if (hasHalfStar) {
+                starsHTML += '<span class="star half">★</span>';
+            }
+            
+            // Empty stars
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < emptyStars; i++) {
+                starsHTML += '<span class="star empty">☆</span>';
+            }
+            
+            starsContainer.innerHTML = starsHTML;
+        }
+        
+        // Add click handler for compare button
+        const compareBtn = card.querySelector('.btn-compare');
+        if (compareBtn) {
+            compareBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const schoolId = this.dataset.schoolId;
+                // The actual compare function is in comparison.js
+                if (window.addToCompare) {
+                    window.addToCompare(schoolId);
+                }
+            });
+        }
+    });
+})();
+</script>
+
+<!-- CSS for School Card -->
+<style>
+.school-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.school-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    border-color: var(--primary-color, #2563eb);
+}
+
+/* Card Header */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.school-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    flex: 1;
+    padding-right: 0.5rem;
+}
+
+.school-link {
+    color: var(--dark, #2d3436);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.school-link:hover {
+    color: var(--primary-color, #2563eb);
+}
+
+/* Rating Badge */
+.rating-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff8e7;
+    padding: 0.25rem 0.5rem;
+    border-radius: 50px;
+    flex-shrink: 0;
+}
+
+.stars-container {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.star {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.star.full {
+    color: #f1c40f;
+}
+
+.star.half {
+    color: #f1c40f;
+    position: relative;
+}
+
+.star.empty {
+    color: #e0e0e0;
+}
+
+.rating-value {
+    font-weight: 600;
+    color: #e67e22;
+    font-size: 0.9rem;
+}
+
+/* Location */
+.school-location {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--gray, #636e72);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.location-icon {
+    flex-shrink: 0;
+}
+
+.location-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Quick Stats */
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    background: var(--light-gray, #f8f9fa);
+    padding: 0.75rem;
+    border-radius: 8px;
+}
+
+.stat {
+    font-size: 0.85rem;
+}
+
+.stat-label {
+    color: var(--gray, #636e72);
+    margin-right: 0.25rem;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: var(--dark, #2d3436);
+}
+
+/* Scores Preview */
+.scores-preview {
+    margin-bottom: 1rem;
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.score-label {
+    min-width: 50px;
+    color: var(--gray, #636e72);
+}
+
+.score-bar {
+    flex: 1;
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.score-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color, #2563eb), var(--secondary-color, #1e40af));
+    border-radius: 3px;
+}
+
+.score-value {
+    min-width: 40px;
+    text-align: right;
+    font-weight: 600;
+    color: var(--primary-color, #2563eb);
+}
+
+/* Card Footer */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.grad-rate {
+    font-size: 0.85rem;
+}
+
+.grad-label {
+    color: var(--gray, #636e72);
+    margin-right: 0.25rem;
+}
+
+.grad-value {
+    font-weight: 600;
+    color: #27ae60;
+}
+
+/* Card Actions */
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.75rem;
+    background: var(--primary-color, #2563eb);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.btn-view:hover {
+    background: var(--secondary-color, #1e40af);
+}
+
+.btn-compare {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.75rem;
+    background: var(--light-gray, #f8f9fa);
+    color: var(--dark, #2d3436);
+    border: 1px solid #e9ecef;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-compare:hover {
+    background: var(--primary-color, #2563eb);
+    color: white;
+    border-color: var(--primary-color, #2563eb);
+}
+
+.btn-compare svg {
+    transition: transform 0.3s ease;
+}
+
+.btn-compare:hover svg {
+    transform: scale(1.1);
+}
+
+.compare-text {
+    display: none;
+}
+
+@media (min-width: 480px) {
+    .compare-text {
+        display: inline;
+    }
+}
+
+/* Premium Badge */
+.premium-badge-card {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .school-card {
+        padding: 1rem;
+    }
+    
+    .school-name {
+        font-size: 1rem;
+    }
+    
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+}
+</style>
