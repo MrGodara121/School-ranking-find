@@ -1,0 +1,647 @@
+<!-- School Comparison Block Component -->
+<div class="comparison-block">
+    <div class="comparison-header">
+        <h3 class="comparison-title">Compare Schools</h3>
+        <p class="comparison-subtitle">Select up to 3 schools to compare side by side</p>
+    </div>
+    
+    <!-- School Selector -->
+    <div class="comparison-selector">
+        <div class="selected-schools" id="selected-schools">
+            <!-- Selected schools will be displayed here -->
+            <div class="empty-state">
+                <p>No schools selected for comparison</p>
+            </div>
+        </div>
+        
+        <!-- School Search for Adding -->
+        <div class="add-school">
+            <div class="search-wrapper">
+                <input type="text" 
+                       class="school-search-input" 
+                       id="comparison-search" 
+                       placeholder="Search for a school to add..."
+                       autocomplete="off">
+                <button class="search-button" type="button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Search Results -->
+            <div class="search-results" id="comparison-results" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <!-- Compare Button -->
+    <div class="compare-actions">
+        <button class="btn-compare-now" id="btn-compare-now" disabled>
+            Compare Selected Schools
+            <span class="selected-count" id="selected-count">0/3</span>
+        </button>
+        <button class="btn-clear-all" id="btn-clear-all" style="display: none;">Clear All</button>
+    </div>
+    
+    <!-- Comparison Table (shown when schools are selected) -->
+    <div class="comparison-table-container" id="comparison-table" style="display: none;">
+        <table class="comparison-table">
+            <thead>
+                <tr id="comparison-header-row">
+                    <th>Metrics</th>
+                    <!-- School headers will be inserted here -->
+                </tr>
+            </thead>
+            <tbody id="comparison-body">
+                <!-- Comparison data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Premium Upgrade Teaser (for more than 2 schools) -->
+    <div class="premium-teaser" id="premium-teaser" style="display: none;">
+        <div class="teaser-content">
+            <span class="premium-icon">⭐</span>
+            <p>Compare up to 5 schools with <strong>Premium</strong> membership</p>
+            <a href="/premium.html" class="btn-premium-small">Upgrade Now</a>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Comparison Block -->
+<script>
+(function() {
+    // Comparison state
+    let selectedSchools = [];
+    let schoolsData = [];
+    let searchTimeout;
+    
+    // Load schools data
+    fetch('/data/schools.json')
+        .then(response => response.json())
+        .then(schools => {
+            schoolsData = schools.filter(s => s.Is_Active === "TRUE");
+        });
+    
+    // DOM elements
+    const searchInput = document.getElementById('comparison-search');
+    const searchResults = document.getElementById('comparison-results');
+    const selectedContainer = document.getElementById('selected-schools');
+    const compareBtn = document.getElementById('btn-compare-now');
+    const clearBtn = document.getElementById('btn-clear-all');
+    const comparisonTable = document.getElementById('comparison-table');
+    const selectedCount = document.getElementById('selected-count');
+    const premiumTeaser = document.getElementById('premium-teaser');
+    
+    // Search input handler
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+                searchSchools(query);
+            }, 300);
+        });
+        
+        // Focus handler
+        searchInput.addEventListener('focus', function() {
+            if (this.value.trim().length >= 2) {
+                searchResults.style.display = 'block';
+            }
+        });
+        
+        // Close results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.add-school')) {
+                searchResults.style.display = 'none';
+            }
+        });
+    }
+    
+    // Search schools
+    function searchSchools(query) {
+        query = query.toLowerCase();
+        
+        const results = schoolsData
+            .filter(school => 
+                school.School_Name.toLowerCase().includes(query) &&
+                !selectedSchools.includes(school.School_ID) // Don't show already selected
+            )
+            .slice(0, 5);
+        
+        if (results.length === 0) {
+            searchResults.innerHTML = '<div class="search-result-item no-results">No schools found</div>';
+            searchResults.style.display = 'block';
+            return;
+        }
+        
+        let html = '';
+        results.forEach(school => {
+            html += `
+                <div class="search-result-item" data-school-id="${school.School_ID}">
+                    <div class="result-name">${school.School_Name}</div>
+                    <div class="result-meta">${school.City}, ${school.State_Code} • ⭐ ${school.Rating}</div>
+                    <button class="btn-add" onclick="addToComparison('${school.School_ID}')">Add</button>
+                </div>
+            `;
+        });
+        
+        searchResults.innerHTML = html;
+        searchResults.style.display = 'block';
+    }
+    
+    // Add school to comparison
+    window.addToComparison = function(schoolId) {
+        const school = schoolsData.find(s => s.School_ID === schoolId);
+        if (!school) return;
+        
+        // Check if max selected (3 for free, 5 for premium)
+        const maxSchools = isPremiumUser() ? 5 : 3;
+        
+        if (selectedSchools.length >= maxSchools) {
+            if (!isPremiumUser()) {
+                premiumTeaser.style.display = 'block';
+            } else {
+                alert(`You can compare up to ${maxSchools} schools`);
+            }
+            return;
+        }
+        
+        if (selectedSchools.includes(schoolId)) return;
+        
+        selectedSchools.push(schoolId);
+        updateSelectedDisplay();
+        updateComparisonTable();
+        
+        // Clear search
+        searchInput.value = '';
+        searchResults.style.display = 'none';
+    };
+    
+    // Remove school from comparison
+    window.removeFromComparison = function(schoolId) {
+        selectedSchools = selectedSchools.filter(id => id !== schoolId);
+        updateSelectedDisplay();
+        updateComparisonTable();
+        premiumTeaser.style.display = 'none';
+    };
+    
+    // Update selected schools display
+    function updateSelectedDisplay() {
+        if (selectedSchools.length === 0) {
+            selectedContainer.innerHTML = '<div class="empty-state"><p>No schools selected for comparison</p></div>';
+            compareBtn.disabled = true;
+            clearBtn.style.display = 'none';
+            comparisonTable.style.display = 'none';
+            selectedCount.textContent = '0/3';
+            return;
+        }
+        
+        let html = '';
+        selectedSchools.forEach(schoolId => {
+            const school = schoolsData.find(s => s.School_ID === schoolId);
+            if (school) {
+                html += `
+                    <div class="selected-school-item">
+                        <div class="selected-school-info">
+                            <div class="selected-school-name">${school.School_Name}</div>
+                            <div class="selected-school-meta">${school.City}, ${school.State_Code}</div>
+                        </div>
+                        <button class="btn-remove" onclick="removeFromComparison('${schoolId}')" aria-label="Remove">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+            }
+        });
+        
+        selectedContainer.innerHTML = html;
+        compareBtn.disabled = false;
+        clearBtn.style.display = 'block';
+        
+        const max = isPremiumUser() ? 5 : 3;
+        selectedCount.textContent = `${selectedSchools.length}/${max}`;
+    }
+    
+    // Update comparison table
+    function updateComparisonTable() {
+        if (selectedSchools.length < 2) {
+            comparisonTable.style.display = 'none';
+            return;
+        }
+        
+        const schools = selectedSchools
+            .map(id => schoolsData.find(s => s.School_ID === id))
+            .filter(s => s);
+        
+        // Build header
+        let headerRow = '<th>Metrics</th>';
+        schools.forEach(school => {
+            headerRow += `<th class="school-header">
+                <div class="school-header-content">
+                    <a href="/school/${school.Slug}">${school.School_Name}</a>
+                    <span class="school-rating">⭐ ${school.Rating}</span>
+                </div>
+            </th>`;
+        });
+        document.getElementById('comparison-header-row').innerHTML = headerRow;
+        
+        // Build comparison rows
+        const metrics = [
+            { label: 'Location', key: (s) => `${s.City}, ${s.State_Code}` },
+            { label: 'School Type', key: (s) => s.School_Type },
+            { label: 'Grades', key: (s) => s.Grade_Level },
+            { label: 'Students', key: (s) => s.Student_Count },
+            { label: 'Student-Teacher Ratio', key: (s) => `${s.Student_Teacher_Ratio}:1` },
+            { label: 'Math Score', key: (s) => `${s.Math_Score}%` },
+            { label: 'Reading Score', key: (s) => `${s.Reading_Score}%` },
+            { label: 'Graduation Rate', key: (s) => `${s.Graduation_Rate}%` },
+            { label: 'National Rank', key: (s) => `#${s.National_Rank}` }
+        ];
+        
+        let bodyHTML = '';
+        
+        metrics.forEach(metric => {
+            bodyHTML += '<tr>';
+            bodyHTML += `<td class="metric-label">${metric.label}</td>`;
+            
+            schools.forEach(school => {
+                const value = metric.key(school);
+                bodyHTML += `<td>${value}</td>`;
+            });
+            
+            bodyHTML += '</tr>';
+        });
+        
+        document.getElementById('comparison-body').innerHTML = bodyHTML;
+        comparisonTable.style.display = 'block';
+    }
+    
+    // Check if user is premium (simplified - actual check in premium-access.js)
+    function isPremiumUser() {
+        return window.premiumStatus?.isActive || false;
+    }
+    
+    // Clear all
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            selectedSchools = [];
+            updateSelectedDisplay();
+            comparisonTable.style.display = 'none';
+            premiumTeaser.style.display = 'none';
+        });
+    }
+    
+    // Compare now button
+    if (compareBtn) {
+        compareBtn.addEventListener('click', function() {
+            if (selectedSchools.length >= 2) {
+                // Redirect to compare page with selected schools
+                const params = new URLSearchParams();
+                selectedSchools.forEach((id, index) => {
+                    params.append(`school${index + 1}`, id);
+                });
+                window.location.href = `/compare.html?${params.toString()}`;
+            }
+        });
+    }
+})();
+</script>
+
+<!-- CSS for Comparison Block -->
+<style>
+.comparison-block {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
+}
+
+.comparison-header {
+    margin-bottom: 1.5rem;
+}
+
+.comparison-title {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.25rem;
+    color: var(--dark, #2d3436);
+}
+
+.comparison-subtitle {
+    margin: 0;
+    color: var(--gray, #636e72);
+    font-size: 0.9rem;
+}
+
+/* Selected Schools */
+.selected-schools {
+    background: var(--light-gray, #f8f9fa);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    min-height: 100px;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--gray, #636e72);
+    font-style: italic;
+    padding: 1rem;
+}
+
+.selected-school-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border: 1px solid #e9ecef;
+}
+
+.selected-school-item:last-child {
+    margin-bottom: 0;
+}
+
+.selected-school-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.selected-school-meta {
+    font-size: 0.8rem;
+    color: var(--gray, #636e72);
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-remove:hover {
+    background: #fee;
+}
+
+/* Add School */
+.add-school {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+.search-wrapper:focus-within {
+    border-color: var(--primary-color, #2563eb);
+}
+
+.school-search-input {
+    flex: 1;
+    border: none;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.search-button {
+    background: none;
+    border: none;
+    padding: 0 1rem;
+    color: var(--gray, #636e72);
+    cursor: pointer;
+}
+
+/* Search Results */
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin-top: 0.25rem;
+    z-index: 100;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+    cursor: pointer;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background: var(--light-gray, #f8f9fa);
+}
+
+.result-name {
+    font-weight: 600;
+    flex: 1;
+}
+
+.result-meta {
+    font-size: 0.8rem;
+    color: var(--gray, #636e72);
+    margin-right: 1rem;
+}
+
+.btn-add {
+    background: var(--primary-color, #2563eb);
+    color: white;
+    border: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.btn-add:hover {
+    background: var(--secondary-color, #1e40af);
+}
+
+.no-results {
+    text-align: center;
+    color: var(--gray, #636e72);
+    padding: 1rem;
+}
+
+/* Compare Actions */
+.compare-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-compare-now {
+    flex: 1;
+    background: var(--primary-color, #2563eb);
+    color: white;
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background 0.3s ease;
+}
+
+.btn-compare-now:hover:not(:disabled) {
+    background: var(--secondary-color, #1e40af);
+}
+
+.btn-compare-now:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.selected-count {
+    background: rgba(255,255,255,0.2);
+    padding: 0.2rem 0.5rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+}
+
+.btn-clear-all {
+    background: var(--light-gray, #f8f9fa);
+    border: 1px solid #e9ecef;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--gray, #636e72);
+}
+
+.btn-clear-all:hover {
+    background: #e9ecef;
+}
+
+/* Comparison Table */
+.comparison-table-container {
+    overflow-x: auto;
+    margin-top: 1.5rem;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.comparison-table th {
+    background: var(--light-gray, #f8f9fa);
+    font-weight: 600;
+    color: var(--dark, #2d3436);
+}
+
+.school-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.school-header-content a {
+    color: var(--primary-color, #2563eb);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.school-header-content a:hover {
+    text-decoration: underline;
+}
+
+.school-rating {
+    font-size: 0.8rem;
+    color: #e67e22;
+}
+
+.metric-label {
+    font-weight: 600;
+    color: var(--gray, #636e72);
+    background: #fafafa;
+}
+
+/* Premium Teaser */
+.premium-teaser {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #fff3e0;
+    border-radius: 8px;
+    border: 1px solid #ffe0b2;
+}
+
+.teaser-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.premium-icon {
+    font-size: 1.5rem;
+}
+
+.teaser-content p {
+    flex: 1;
+    margin: 0;
+    color: #e67e22;
+}
+
+.btn-premium-small {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.btn-premium-small:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+}
+</style>
