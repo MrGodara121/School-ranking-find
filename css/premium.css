@@ -1,0 +1,694 @@
+/* ============================================
+   [SITE_NAME] - Premium Features Styles
+   Version: 1.0
+   ============================================ */
+
+/* --------------------------------------------
+   1. Premium Badges
+   -------------------------------------------- */
+.premium-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.premium-badge-large {
+    font-size: var(--text-base);
+    padding: var(--spacing-sm) var(--spacing-lg);
+}
+
+.premium-badge-gold {
+    background: linear-gradient(135deg, #f1c40f, #e67e22);
+    box-shadow: 0 2px 10px rgba(241, 196, 15, 0.3);
+}
+
+/* --------------------------------------------
+   2. Premium Cards
+   -------------------------------------------- */
+.premium-card {
+    background: linear-gradient(135deg, #fff, #fff8f0);
+    border: 2px solid #f39c12;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.premium-card::before {
+    content: '⭐';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 80px;
+    opacity: 0.1;
+    transform: rotate(15deg);
+}
+
+.premium-card-header {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.premium-card-header h3 {
+    color: #e67e22;
+    font-size: var(--text-2xl);
+    margin-bottom: var(--spacing-sm);
+}
+
+.premium-card-header p {
+    color: var(--gray);
+}
+
+/* --------------------------------------------
+   3. Premium Features List
+   -------------------------------------------- */
+.premium-features-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--spacing-lg) 0;
+}
+
+.premium-features-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid rgba(243, 156, 18, 0.2);
+}
+
+.premium-features-list li:last-child {
+    border-bottom: none;
+}
+
+.premium-features-list .feature-icon {
+    width: 24px;
+    height: 24px;
+    background: #f39c12;
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-sm);
+}
+
+.premium-features-list .feature-text {
+    flex: 1;
+    font-size: var(--text-base);
+}
+
+.premium-features-list .feature-text strong {
+    color: #e67e22;
+}
+
+/* --------------------------------------------
+   4. Premium Pricing Tables
+   -------------------------------------------- */
+.premium-pricing-table {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    margin: var(--spacing-2xl) 0;
+}
+
+.pricing-column {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    position: relative;
+    transition: transform var(--transition-base);
+    border: 1px solid var(--light-gray);
+}
+
+.pricing-column:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-xl);
+}
+
+.pricing-column.popular {
+    border: 2px solid #f39c12;
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+.popular-tag {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: var(--white);
+    padding: var(--spacing-xs) var(--spacing-lg);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.pricing-header {
+    margin-bottom: var(--spacing-lg);
+}
+
+.pricing-name {
+    font-size: var(--text-xl);
+    color: var(--dark);
+    margin-bottom: var(--spacing-sm);
+}
+
+.pricing-price {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    color: #e67e22;
+}
+
+.pricing-price small {
+    font-size: var(--text-base);
+    color: var(--gray);
+    font-weight: normal;
+}
+
+.pricing-period {
+    color: var(--gray);
+    font-size: var(--text-sm);
+}
+
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: var(--spacing-lg) 0;
+}
+
+.pricing-features li {
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px solid var(--light-gray);
+    font-size: var(--text-sm);
+}
+
+.pricing-features li:last-child {
+    border-bottom: none;
+}
+
+.pricing-features .feature-disabled {
+    color: var(--gray);
+    text-decoration: line-through;
+}
+
+.pricing-cta {
+    margin-top: var(--spacing-lg);
+}
+
+.pricing-cta .btn {
+    width: 100%;
+}
+
+/* --------------------------------------------
+   5. Premium Comparison Table
+   -------------------------------------------- */
+.premium-comparison {
+    margin: var(--spacing-2xl) 0;
+}
+
+.premium-comparison h3 {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    color: #e67e22;
+}
+
+.comparison-grid {
+    display: grid;
+    grid-template-columns: 200px repeat(3, 1fr);
+    gap: 1px;
+    background: var(--light-gray);
+    border: 1px solid var(--light-gray);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.comparison-row {
+    display: contents;
+}
+
+.comparison-cell {
+    background: var(--white);
+    padding: var(--spacing-md);
+    font-size: var(--text-sm);
+}
+
+.comparison-cell.feature-name {
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.comparison-cell.premium-feature {
+    text-align: center;
+}
+
+.comparison-cell .check {
+    color: var(--success);
+    font-weight: bold;
+    font-size: var(--text-lg);
+}
+
+.comparison-cell .cross {
+    color: var(--danger);
+    font-size: var(--text-lg);
+}
+
+.comparison-header {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: var(--white);
+    font-weight: 600;
+    text-align: center;
+}
+
+/* --------------------------------------------
+   6. Premium Content Lock
+   -------------------------------------------- */
+.premium-lock {
+    position: relative;
+    filter: blur(4px);
+    pointer-events: none;
+    user-select: none;
+}
+
+.premium-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    pointer-events: all;
+    backdrop-filter: blur(4px);
+}
+
+.premium-overlay-content {
+    text-align: center;
+    max-width: 400px;
+    padding: var(--spacing-xl);
+}
+
+.premium-overlay-icon {
+    font-size: var(--text-5xl);
+    margin-bottom: var(--spacing-lg);
+}
+
+.premium-overlay h3 {
+    color: #e67e22;
+    margin-bottom: var(--spacing-md);
+}
+
+.premium-overlay p {
+    color: var(--gray);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* --------------------------------------------
+   7. Premium Progress Bar
+   -------------------------------------------- */
+.premium-progress {
+    margin: var(--spacing-xl) 0;
+}
+
+.progress-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+    color: var(--gray);
+    font-size: var(--text-sm);
+}
+
+.progress-stats .current {
+    color: #e67e22;
+    font-weight: 600;
+}
+
+.progress-bar {
+    height: 8px;
+    background: var(--light-gray);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f39c12, #e67e22);
+    border-radius: var(--radius-full);
+    transition: width var(--transition-base);
+}
+
+/* --------------------------------------------
+   8. Premium Account Dashboard
+   -------------------------------------------- */
+.premium-dashboard {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
+}
+
+.premium-sidebar {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.premium-user-info {
+    text-align: center;
+    padding: var(--spacing-lg) 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.premium-avatar {
+    width: 80px;
+    height: 80px;
+    background: #f39c12;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-3xl);
+    margin: 0 auto var(--spacing-md);
+}
+
+.premium-user-name {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.premium-user-email {
+    font-size: var(--text-sm);
+    opacity: 0.8;
+    margin-bottom: var(--spacing-sm);
+}
+
+.premium-badge-sidebar {
+    display: inline-block;
+    background: #f39c12;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-size: var(--text-xs);
+    font-weight: 600;
+}
+
+.premium-menu {
+    list-style: none;
+    padding: var(--spacing-lg) 0;
+}
+
+.premium-menu li {
+    margin-bottom: var(--spacing-xs);
+}
+
+.premium-menu a {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.premium-menu a:hover,
+.premium-menu a.active {
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+}
+
+.premium-menu .menu-icon {
+    width: 20px;
+    text-align: center;
+}
+
+.premium-main {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+}
+
+/* --------------------------------------------
+   9. Premium Features Grid
+   -------------------------------------------- */
+.premium-features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+}
+
+.premium-feature-box {
+    text-align: center;
+    padding: var(--spacing-xl);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--light-gray);
+    transition: all var(--transition-base);
+}
+
+.premium-feature-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: #f39c12;
+}
+
+.premium-feature-icon {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--spacing-md);
+}
+
+.premium-feature-box h4 {
+    color: #e67e22;
+    margin-bottom: var(--spacing-sm);
+}
+
+.premium-feature-box p {
+    color: var(--gray);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+}
+
+/* --------------------------------------------
+   10. Premium Testimonials
+   -------------------------------------------- */
+.premium-testimonials {
+    margin: var(--spacing-2xl) 0;
+}
+
+.testimonial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.testimonial-card {
+    background: linear-gradient(135deg, #fff8f0, #fff);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    position: relative;
+}
+
+.testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-md);
+    font-size: 80px;
+    color: #f39c12;
+    opacity: 0.2;
+    font-family: serif;
+}
+
+.testimonial-content {
+    position: relative;
+    z-index: 1;
+    margin-bottom: var(--spacing-lg);
+    color: var(--dark);
+    font-style: italic;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.testimonial-avatar {
+    width: 40px;
+    height: 40px;
+    background: #f39c12;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 600;
+}
+
+.testimonial-info h5 {
+    margin: 0;
+    font-size: var(--text-sm);
+}
+
+.testimonial-info p {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--gray);
+}
+
+.testimonial-rating {
+    color: #f39c12;
+    margin-top: var(--spacing-xs);
+}
+
+/* --------------------------------------------
+   11. Premium FAQ
+   -------------------------------------------- */
+.premium-faq {
+    max-width: 800px;
+    margin: var(--spacing-2xl) auto;
+}
+
+.premium-faq-item {
+    background: var(--white);
+    border: 1px solid var(--light-gray);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-md);
+    overflow: hidden;
+}
+
+.premium-faq-question {
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, #f8f9fa, #fff);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.premium-faq-question h4 {
+    margin: 0;
+    color: #e67e22;
+}
+
+.premium-faq-toggle {
+    width: 30px;
+    height: 30px;
+    background: #f39c12;
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.premium-faq-answer {
+    padding: 0 var(--spacing-lg);
+    max-height: 0;
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+
+.premium-faq-item.active .premium-faq-answer {
+    padding: var(--spacing-lg);
+    max-height: 500px;
+}
+
+.premium-faq-item.active .premium-faq-toggle {
+    transform: rotate(45deg);
+}
+
+/* --------------------------------------------
+   12. Premium Animations
+   -------------------------------------------- */
+@keyframes premiumPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(243, 156, 18, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(243, 156, 18, 0);
+    }
+}
+
+.premium-pulse {
+    animation: premiumPulse 2s infinite;
+}
+
+@keyframes premiumGlow {
+    from {
+        filter: drop-shadow(0 0 2px #f39c12);
+    }
+    to {
+        filter: drop-shadow(0 0 8px #e67e22);
+    }
+}
+
+.premium-glow {
+    animation: premiumGlow 1.5s ease-in-out infinite alternate;
+}
+
+/* --------------------------------------------
+   13. Premium Responsive
+   -------------------------------------------- */
+@media (max-width: 991px) {
+    .premium-pricing-table {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .premium-dashboard {
+        grid-template-columns: 1fr;
+    }
+    
+    .premium-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .testimonial-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 767px) {
+    .premium-pricing-table {
+        grid-template-columns: 1fr;
+    }
+    
+    .pricing-column.popular {
+        transform: scale(1);
+    }
+    
+    .comparison-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .premium-features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .premium-dashboard {
+        gap: var(--spacing-md);
+    }
+}
