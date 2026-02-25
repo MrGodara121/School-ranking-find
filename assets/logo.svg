@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="180" height="50" viewBox="0 0 180 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- School Building Icon -->
+    <g>
+        <!-- Building Base -->
+        <rect x="10" y="20" width="30" height="20" rx="2" fill="#2563EB" opacity="0.9"/>
+        
+        <!-- Roof -->
+        <polygon points="5,20 25,8 45,20" fill="#1E40AF" stroke="#2563EB" stroke-width="1"/>
+        
+        <!-- Door -->
+        <rect x="20" y="30" width="10" height="10" rx="1" fill="#F59E0B"/>
+        
+        <!-- Windows -->
+        <circle cx="15" cy="25" r="2" fill="#FFFFFF"/>
+        <circle cx="35" cy="25" r="2" fill="#FFFFFF"/>
+        
+        <!-- Flag -->
+        <path d="M35 8 L35 15 L40 11.5 L35 8" fill="#EF4444"/>
+        <line x1="35" y1="8" x2="35" y2="20" stroke="#4B5563" stroke-width="1"/>
+    </g>
+    
+    <!-- Text: School Rating Site -->
+    <g>
+        <!-- Main Text -->
+        <text x="60" y="30" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1F2937">
+            School<span style="fill:#2563EB">Ratings</span>
+        </text>
+        
+        <!-- Tagline -->
+        <text x="60" y="45" font-family="Arial, sans-serif" font-size="12" fill="#6B7280">
+            Find the Best School for Your Child
+        </text>
+    </g>
+    
+    <!-- Star Rating Icon -->
+    <g>
+        <path d="M140 15 L143 21 L150 22 L145 27 L146 34 L140 30 L134 34 L135 27 L130 22 L137 21 L140 15" 
+              fill="#F59E0B" opacity="0.8"/>
+    </g>
+    
+    <!-- Trust Badge -->
+    <circle cx="160" cy="20" r="8" fill="#10B981" opacity="0.2"/>
+    <text x="157" y="24" font-family="Arial, sans-serif" font-size="10" fill="#047857">✓</text>
+    
+    <!-- Responsive scaling instructions -->
+    <metadata>
+        <svg:title>School Ratings Logo</svg:title>
+        <svg:description>Logo for school ratings website with building icon and text</svg:description>
+        <svg:copyright>© 2024 SchoolRatings</svg:copyright>
+    </metadata>
+</svg>
+
+<!-- Alternative Version - White Logo for Footer -->
+<svg width="180" height="50" viewBox="0 0 180 50" fill="none" xmlns="http://www.w3.org/2000/svg" id="logo-white">
+    <!-- Building Icon - White Version -->
+    <g>
+        <rect x="10" y="20" width="30" height="20" rx="2" fill="#FFFFFF" opacity="0.9"/>
+        <polygon points="5,20 25,8 45,20" fill="#E5E7EB"/>
+        <rect x="20" y="30" width="10" height="10" rx="1" fill="#FCD34D"/>
+        <circle cx="15" cy="25" r="2" fill="#FFFFFF"/>
+        <circle cx="35" cy="25" r="2" fill="#FFFFFF"/>
+        <path d="M35 8 L35 15 L40 11.5 L35 8" fill="#FCA5A5"/>
+        <line x1="35" y1="8" x2="35" y2="20" stroke="#D1D5DB" stroke-width="1"/>
+    </g>
+    
+    <!-- Text - White Version -->
+    <g>
+        <text x="60" y="30" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#FFFFFF">
+            School<span style="fill:#93C5FD">Ratings</span>
+        </text>
+        <text x="60" y="45" font-family="Arial, sans-serif" font-size="12" fill="#D1D5DB">
+            Find the Best School for Your Child
+        </text>
+    </g>
+    
+    <!-- Star - White Version -->
+    <path d="M140 15 L143 21 L150 22 L145 27 L146 34 L140 30 L134 34 L135 27 L130 22 L137 21 L140 15" 
+          fill="#FCD34D" opacity="0.9"/>
+</svg>
+
+<!-- Favicon Version - Square Icon -->
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" id="favicon-icon">
+    <rect width="32" height="32" rx="6" fill="#2563EB"/>
+    <rect x="6" y="12" width="20" height="14" rx="2" fill="white" opacity="0.9"/>
+    <polygon points="2,12 16,4 30,12" fill="#1E40AF"/>
+    <rect x="12" y="18" width="8" height="8" rx="1" fill="#F59E0B"/>
+    <circle cx="10" cy="15" r="2" fill="white"/>
+    <circle cx="22" cy="15" r="2" fill="white"/>
+    <path d="M21 4 L21 8 L24 6 L21 4" fill="#EF4444"/>
+    <text x="8" y="28" font-family="Arial" font-size="8" fill="white" font-weight="bold">SR</text>
+</svg>
