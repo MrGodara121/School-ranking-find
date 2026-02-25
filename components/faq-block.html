@@ -1,0 +1,368 @@
+<!-- FAQ Block Component -->
+<div class="faq-block">
+    <div class="faq-header">
+        <h3 class="faq-title">Frequently Asked Questions</h3>
+        <p class="faq-subtitle">Find quick answers to common questions</p>
+    </div>
+    
+    <div class="faq-list" id="faq-list">
+        <!-- FAQ items will be loaded here dynamically -->
+        <div class="faq-loading">Loading FAQs...</div>
+    </div>
+    
+    <div class="faq-footer">
+        <p>Still have questions? <a href="/contact.html">Contact our support team</a></p>
+    </div>
+</div>
+
+<!-- Individual FAQ Item Template -->
+<template id="faq-item-template">
+    <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+            <span class="question-text">Question goes here</span>
+            <span class="faq-icon">
+                <svg class="plus-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <svg class="minus-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="display: none;">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </span>
+        </button>
+        <div class="faq-answer" hidden>
+            <p>Answer goes here</p>
+        </div>
+    </div>
+</template>
+
+<!-- JavaScript for FAQ Block -->
+<script>
+(function() {
+    class FAQBlock {
+        constructor(containerId = 'faq-list', pageType = 'default') {
+            this.container = document.getElementById(containerId);
+            this.pageType = pageType;
+            this.faqs = [];
+            this.init();
+        }
+        
+        init() {
+            if (!this.container) return;
+            
+            // Try to load from API first
+            this.loadFromAPI();
+        }
+        
+        loadFromAPI() {
+            fetch(`${CONFIG.API_BASE}?action=getFAQs&type=${this.pageType}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.faqs && data.faqs.length > 0) {
+                        this.faqs = data.faqs;
+                        this.render();
+                    } else {
+                        this.loadFallbackFAQs();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading FAQs:', error);
+                    this.loadFallbackFAQs();
+                });
+        }
+        
+        loadFallbackFAQs() {
+            // Default FAQs based on page type
+            const defaultFAQs = {
+                'default': [
+                    {
+                        question: 'How are school ratings calculated?',
+                        answer: 'Our ratings are calculated using a proprietary algorithm that considers test scores, student-teacher ratios, graduation rates, parent reviews, and other factors. Each factor is weighted to produce an overall 1-5 star rating.'
+                    },
+                    {
+                        question: 'Where does the data come from?',
+                        answer: 'We aggregate data from state education departments, the National Center for Education Statistics (NCES), and other public sources. All data sources are cited on each school page.'
+                    },
+                    {
+                        question: 'How often is the data updated?',
+                        answer: 'We update our database quarterly as new state data becomes available. Parent reviews are updated in real-time.'
+                    },
+                    {
+                        question: 'Can I review my school?',
+                        answer: 'Yes! Parents, students, and alumni can leave reviews for schools. All reviews are moderated to ensure authenticity and quality.'
+                    },
+                    {
+                        question: 'Is this site affiliated with the government?',
+                        answer: 'No, [SITE_NAME] is an independent platform and is not affiliated with any government agency or school district.'
+                    }
+                ],
+                'school': [
+                    {
+                        question: 'What grades does this school serve?',
+                        answer: 'This school serves students in grades [GRADE_LEVEL].'
+                    },
+                    {
+                        question: 'What is the student-teacher ratio?',
+                        answer: 'The student-teacher ratio at this school is [STUDENT_TEACHER_RATIO]:1.'
+                    },
+                    {
+                        question: 'What are the test scores?',
+                        answer: 'Students at this school score an average of [MATH_SCORE]% in math and [READING_SCORE]% in reading proficiency tests.'
+                    },
+                    {
+                        question: 'What is the graduation rate?',
+                        answer: 'The graduation rate at this school is [GRADUATION_RATE]%.'
+                    },
+                    {
+                        question: 'How can I enroll my child?',
+                        answer: 'For enrollment information, please contact the school directly or visit their official website.'
+                    }
+                ],
+                'district': [
+                    {
+                        question: 'How many schools are in this district?',
+                        answer: 'This district has [TOTAL_SCHOOLS] schools.'
+                    },
+                    {
+                        question: 'What is the average rating for schools in this district?',
+                        answer: 'Schools in this district have an average rating of [AVG_RATING] out of 5 stars.'
+                    },
+                    {
+                        question: 'What is the student-teacher ratio in this district?',
+                        answer: 'The average student-teacher ratio across the district is [AVG_RATIO]:1.'
+                    }
+                ]
+            };
+            
+            this.faqs = defaultFAQs[this.pageType] || defaultFAQs.default;
+            this.render();
+        }
+        
+        render() {
+            if (!this.container) return;
+            
+            if (this.faqs.length === 0) {
+                this.container.innerHTML = '<p class="no-faqs">No FAQs available at this time.</p>';
+                return;
+            }
+            
+            let html = '';
+            this.faqs.forEach((faq, index) => {
+                html += `
+                    <div class="faq-item">
+                        <button class="faq-question" aria-expanded="false" data-index="${index}">
+                            <span class="question-text">${faq.question}</span>
+                            <span class="faq-icon">
+                                <svg class="plus-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                <svg class="minus-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="display: none;">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-answer" hidden>
+                            <p>${faq.answer}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            this.container.innerHTML = html;
+            
+            // Add event listeners to FAQ questions
+            this.container.querySelectorAll('.faq-question').forEach(button => {
+                button.addEventListener('click', () => this.toggleFAQ(button));
+            });
+        }
+        
+        toggleFAQ(button) {
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+            const answer = button.nextElementSibling;
+            const plusIcon = button.querySelector('.plus-icon').parentElement;
+            const minusIcon = button.querySelector('.minus-icon').parentElement;
+            
+            // Toggle attributes
+            button.setAttribute('aria-expanded', !isExpanded);
+            
+            if (!isExpanded) {
+                // Open this FAQ
+                answer.removeAttribute('hidden');
+                plusIcon.style.display = 'none';
+                minusIcon.style.display = 'inline';
+                
+                // Optional: Close other FAQs
+                // this.container.querySelectorAll('.faq-answer').forEach(a => {
+                //     if (a !== answer) a.setAttribute('hidden', '');
+                // });
+                // this.container.querySelectorAll('.faq-question').forEach(b => {
+                //     if (b !== button) {
+                //         b.setAttribute('aria-expanded', 'false');
+                //         b.querySelector('.plus-icon').parentElement.style.display = 'inline';
+                //         b.querySelector('.minus-icon').parentElement.style.display = 'none';
+                //     }
+                // });
+            } else {
+                // Close this FAQ
+                answer.setAttribute('hidden', '');
+                plusIcon.style.display = 'inline';
+                minusIcon.style.display = 'none';
+            }
+        }
+    }
+    
+    // Initialize FAQ block when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        // Determine page type from URL
+        const path = window.location.pathname;
+        let pageType = 'default';
+        
+        if (path.includes('/school/')) {
+            pageType = 'school';
+        } else if (path.includes('/district/')) {
+            pageType = 'district';
+        } else if (path.includes('/state/')) {
+            pageType = 'state';
+        }
+        
+        // Initialize FAQ
+        window.faqBlock = new FAQBlock('faq-list', pageType);
+    });
+})();
+</script>
+
+<!-- CSS for FAQ Block -->
+<style>
+.faq-block {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
+}
+
+.faq-header {
+    margin-bottom: 1.5rem;
+}
+
+.faq-title {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.25rem;
+    color: var(--dark, #2d3436);
+}
+
+.faq-subtitle {
+    margin: 0;
+    color: var(--gray, #636e72);
+    font-size: 0.9rem;
+}
+
+/* FAQ Items */
+.faq-list {
+    margin-bottom: 1.5rem;
+}
+
+.faq-item {
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 0.5rem;
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.faq-question {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 0;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--dark, #2d3436);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.faq-question:hover {
+    color: var(--primary-color, #2563eb);
+}
+
+.faq-question:focus {
+    outline: none;
+    color: var(--primary-color, #2563eb);
+}
+
+.question-text {
+    flex: 1;
+    padding-right: 1rem;
+}
+
+.faq-icon {
+    flex-shrink: 0;
+    color: var(--primary-color, #2563eb);
+}
+
+.faq-answer {
+    padding: 0 0 1rem 0;
+    color: var(--gray, #636e72);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.faq-answer p {
+    margin: 0;
+}
+
+.faq-answer a {
+    color: var(--primary-color, #2563eb);
+    text-decoration: none;
+}
+
+.faq-answer a:hover {
+    text-decoration: underline;
+}
+
+/* FAQ Footer */
+.faq-footer {
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+    color: var(--gray, #636e72);
+    font-size: 0.9rem;
+}
+
+.faq-footer a {
+    color: var(--primary-color, #2563eb);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.faq-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Loading State */
+.faq-loading {
+    text-align: center;
+    color: var(--gray, #636e72);
+    padding: 2rem;
+    font-style: italic;
+}
+
+.no-faqs {
+    text-align: center;
+    color: var(--gray, #636e72);
+    padding: 2rem;
+}
+
+/* FAQ Schema Markup (hidden) */
+.faq-schema {
+    display: none;
+}
+</style>
