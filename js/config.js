@@ -9,21 +9,21 @@
 // ============================================
 const CONFIG = {
     // Site Information
-    SITE_NAME: '[SITE_NAME]',
-    DOMAIN: '[DOMAIN]',
-    BASE_URL: 'https://[DOMAIN]',
+    SITE_NAME: 'School Ratings',
+    DOMAIN: 'yourdomain.com',
+    BASE_URL: 'https://yourdomain.com',
     
-    // API Endpoints
-    API_BASE: 'https://script.google.com/macros/s/[API_SECRET]/exec',
+    // API Endpoints - YOUR APPS SCRIPT URL
+    API_BASE: 'https://script.google.com/macros/s/AKfycbwVX33jHU86xGqHnfbgWd6PehBmRTbMRORXph32Y7HS1t3Gjne8lTz5bcPU-l2YAGQZ/exec',
     API_TIMEOUT: 10000, // 10 seconds
     
     // Analytics
-    GA4_ID: '[GA4_ID]',
-    ADSENSE_ID: '[ADSENSE_ID]',
+    GA4_ID: 'G-XXXXXXXXXX',
+    ADSENSE_ID: 'pub-XXXXXXXXXX',
     
     // Security
-    RECAPTCHA_KEY: '[RECAPTCHA_KEY]',
-    API_SECRET: '[API_SECRET]',
+    RECAPTCHA_KEY: '6LeXXXXXXXXXX',
+    API_SECRET: 'your-secret-key-here', // Will be replaced from SETTINGS
     
     // Premium Pricing
     PREMIUM: {
@@ -93,27 +93,27 @@ const CONFIG = {
     
     // Social Media
     SOCIAL: {
-        FACEBOOK: 'https://facebook.com/[SITE_NAME]',
-        TWITTER: 'https://twitter.com/[SITE_NAME]',
-        INSTAGRAM: 'https://instagram.com/[SITE_NAME]',
-        LINKEDIN: 'https://linkedin.com/company/[SITE_NAME]',
-        YOUTUBE: 'https://youtube.com/[SITE_NAME]'
+        FACEBOOK: 'https://facebook.com/schoolratings',
+        TWITTER: 'https://twitter.com/schoolratings',
+        INSTAGRAM: 'https://instagram.com/schoolratings',
+        LINKEDIN: 'https://linkedin.com/company/schoolratings',
+        YOUTUBE: 'https://youtube.com/schoolratings'
     },
     
     // Contact Information
     CONTACT: {
-        EMAIL: '[LEAD_NOTIFICATION_EMAIL]',
+        EMAIL: 'contact@schoolratings.com',
         PHONE: '+1 (555) 123-4567',
-        ADDRESS: '123 Education Lane, Suite 100, [CITY], [STATE] [ZIP]',
+        ADDRESS: '123 Education Lane, Suite 100, San Francisco, CA 94105',
         SUPPORT_HOURS: 'Mon-Fri, 9am-5pm EST'
     },
     
     // SEO Defaults
     SEO: {
-        TITLE: 'School Ratings & Reviews | [SITE_NAME]',
+        TITLE: 'School Ratings & Reviews | School Ratings',
         DESCRIPTION: 'Find detailed ratings, reviews, and performance data for schools across the United States.',
         KEYWORDS: 'school ratings, school reviews, education, test scores, parent reviews',
-        AUTHOR: '[SITE_NAME]',
+        AUTHOR: 'School Ratings',
         ROBOTS: 'index, follow'
     }
 };
