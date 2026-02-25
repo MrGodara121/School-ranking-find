@@ -1,0 +1,431 @@
+/* ============================================
+   [SITE_NAME] - Responsive Styles
+   Version: 1.0
+   ============================================ */
+
+/* --------------------------------------------
+   1. Extra Large Devices (1200px and up)
+   -------------------------------------------- */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .hide-xl {
+        display: none !important;
+    }
+    
+    .show-xl {
+        display: block !important;
+    }
+}
+
+/* --------------------------------------------
+   2. Large Devices (992px to 1199px)
+   -------------------------------------------- */
+@media (max-width: 1199px) {
+    .container {
+        max-width: 960px;
+    }
+    
+    /* Grid Adjustments */
+    .grid-4 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .grid-5,
+    .grid-6 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    /* Footer */
+    .footer-main {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .footer-section.about {
+        grid-column: span 4;
+    }
+    
+    /* Hide/Show */
+    .hide-lg {
+        display: none !important;
+    }
+    
+    .show-lg {
+        display: block !important;
+    }
+}
+
+/* --------------------------------------------
+   3. Medium Devices (768px to 991px)
+   -------------------------------------------- */
+@media (max-width: 991px) {
+    .container {
+        max-width: 720px;
+    }
+    
+    /* Typography */
+    h1 { font-size: var(--text-3xl); }
+    h2 { font-size: var(--text-2xl); }
+    h3 { font-size: var(--text-xl); }
+    
+    /* Grid */
+    .grid-3,
+    .grid-4,
+    .grid-5,
+    .grid-6 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Navigation */
+    .desktop-nav {
+        display: none;
+    }
+    
+    .mobile-only {
+        display: flex;
+    }
+    
+    /* Header */
+    .btn-premium .premium-text {
+        display: none;
+    }
+    
+    /* Search Section */
+    .search-input {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--text-base);
+    }
+    
+    .search-filters {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    /* Footer */
+    .footer-main {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+    
+    .footer-section.about {
+        grid-column: span 2;
+    }
+    
+    .footer-newsletter {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .newsletter-wrapper {
+        width: 100%;
+    }
+    
+    /* Trust Badges */
+    .trust-badges-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .accreditation-badges {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    /* Premium Pricing */
+    .premium-pricing {
+        grid-template-columns: 1fr;
+    }
+    
+    .price-card.popular {
+        order: -1;
+    }
+    
+    /* Hide/Show */
+    .hide-md {
+        display: none !important;
+    }
+    
+    .show-md {
+        display: block !important;
+    }
+}
+
+/* --------------------------------------------
+   4. Small Devices (576px to 767px)
+   -------------------------------------------- */
+@media (max-width: 767px) {
+    .container {
+        max-width: 540px;
+        padding: 0 var(--spacing-md);
+    }
+    
+    /* Typography */
+    h1 { font-size: var(--text-2xl); }
+    h2 { font-size: var(--text-xl); }
+    
+    /* Grid */
+    .grid-2,
+    .grid-3,
+    .grid-4,
+    .grid-5,
+    .grid-6 {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Header */
+    .header-wrapper {
+        padding: var(--spacing-sm) 0;
+    }
+    
+    .site-name {
+        display: none;
+    }
+    
+    .logo {
+        height: 32px;
+    }
+    
+    /* Buttons */
+    .btn {
+        padding: var(--spacing-xs) var(--spacing-md);
+    }
+    
+    /* Cards */
+    .school-card {
+        padding: var(--spacing-md);
+    }
+    
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-footer {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        align-items: flex-start;
+    }
+    
+    .card-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    /* Comparison Table */
+    .comparison-table {
+        font-size: var(--text-sm);
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: var(--spacing-sm);
+    }
+    
+    /* Footer */
+    .footer-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-section.about {
+        grid-column: span 1;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-bottom-links {
+        justify-content: center;
+    }
+    
+    /* Trust Badges */
+    .trust-badges-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .source-grid {
+        justify-content: center;
+    }
+    
+    .trust-seals {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    /* Forms */
+    .lead-form-card {
+        padding: var(--spacing-lg);
+    }
+    
+    .checkbox-wrapper {
+        flex-wrap: wrap;
+    }
+    
+    /* Modals */
+    .modal-dialog {
+        width: 95%;
+        margin: var(--spacing-xl) auto;
+    }
+    
+    /* Hide/Show */
+    .hide-sm {
+        display: none !important;
+    }
+    
+    .show-sm {
+        display: block !important;
+    }
+}
+
+/* --------------------------------------------
+   5. Extra Small Devices (below 576px)
+   -------------------------------------------- */
+@media (max-width: 575px) {
+    /* Typography */
+    .text-center-xs {
+        text-align: center;
+    }
+    
+    /* Header */
+    .header-actions {
+        gap: var(--spacing-xs);
+    }
+    
+    .btn-premium {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    /* Search */
+    .search-input-wrapper {
+        flex-direction: column;
+    }
+    
+    .search-submit {
+        width: 100%;
+        padding: var(--spacing-sm);
+        border-top: 1px solid var(--light-gray);
+    }
+    
+    .popular-searches {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    /* Cards */
+    .school-name {
+        font-size: var(--text-base);
+    }
+    
+    .rating-badge {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    
+    /* Tables */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .table {
+        min-width: 600px;
+    }
+    
+    /* Footer */
+    .newsletter-wrapper {
+        flex-direction: column;
+    }
+    
+    .newsletter-submit {
+        width: 100%;
+    }
+    
+    /* Premium Box */
+    .premium-features {
+        font-size: var(--text-sm);
+    }
+    
+    /* Hide/Show */
+    .hide-xs {
+        display: none !important;
+    }
+    
+    .show-xs {
+        display: block !important;
+    }
+}
+
+/* --------------------------------------------
+   6. Print Media
+   -------------------------------------------- */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+        color: #000;
+    }
+    
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+    
+    .container {
+        max-width: 100%;
+    }
+    
+    .card,
+    .school-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
+
+/* --------------------------------------------
+   7. Landscape Orientation
+   -------------------------------------------- */
+@media (orientation: landscape) and (max-height: 600px) {
+    .modal-dialog {
+        margin: var(--spacing-md) auto;
+    }
+    
+    .modal-body {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+}
+
+/* --------------------------------------------
+   8. High Contrast Mode
+   -------------------------------------------- */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #0000ff;
+        --secondary-color: #0000cc;
+    }
+    
+    .btn,
+    .card,
+    .form-control {
+        border-width: 2px;
+    }
+}
+
+/* --------------------------------------------
+   9. Reduced Motion
+   -------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
